@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-  <!-- Screen Design for What's Recent -->
-  <TextView android:text="@string/whats_recent"
+  <!-- View voor adresboek -->
+  <TextView android:text="@string/address_book"
             android:padding="15dip"
             android:textSize="18dip"
             android:layout_width="fill_parent"

@@ -1,9 +1,13 @@
 <resources>
 
     <string name="app_name">KaHoSL</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="whats_recent">What\'s Recent?</string>
+    <string name="agenda">Agenda</string>
+    <string name="address_book">Adresboek</string>
+    <string name="kdisk">K-Schijf</string>
+    <string name="menu_settings">Instellingen</string>
+    
     <string name="title_activity_kahosl">KaHoSL Activity</string>
-    <string name="whats_recent">What\'s Recent</string>
+
 
 </resources>
