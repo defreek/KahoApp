@@ -4,49 +4,54 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 
 public class KahoslActivity extends Activity implements TabListener {
 	
 	private RelativeLayout r;
+	private FragmentTransaction fTransaction = null;
+	
+	// Modules
 	private WhatsRecentFragment wr;
+	private AgendaFragment agenda;
 	private AddressBookFragment addressbook;
+	private KDiskFragment kdisk;
+	private SettingsFragment settings;
+	
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kahosl);
         
+        wr = new WhatsRecentFragment();
+        
 		try {
 			r = (RelativeLayout) findViewById(R.id.mainLayout);
-			fragMentTra = getFragmentManager().beginTransaction();
-			ActionBar bar = getActionBar();
-			
+			fTransaction = getFragmentManager().beginTransaction();
+			ActionBar aBar = getActionBar();
 		
-			bar.addTab(bar.newTab().setText("WR").setTabListener(this));
-			bar.addTab(bar.newTab().setText("AG").setTabListener(this));
-			bar.addTab(bar.newTab().setText("AD").setTabListener(this));
-			bar.addTab(bar.newTab().setText("KS").setTabListener(this));
-
-			bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO);
-			bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-			bar.setDisplayShowHomeEnabled(false);
-			bar.setDisplayShowTitleEnabled(false);
-			bar.show();
+			aBar.addTab(aBar.newTab().setText("WR").setTabListener(this));
+			aBar.addTab(aBar.newTab().setText("AG").setTabListener(this));
+			aBar.addTab(aBar.newTab().setText("AD").setTabListener(this));
+			aBar.addTab(aBar.newTab().setText("KS").setTabListener(this));
+			aBar.addTab(aBar.newTab().setText("ST").setTabListener(this));
+			
+			aBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_USE_LOGO);
+			aBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			aBar.setDisplayShowHomeEnabled(false);
+			aBar.setDisplayShowTitleEnabled(false);
+			aBar.show();
 
 		} catch (Exception e) {
-			e.getMessage();
+			Log.wtf("Exc: onCreate KahoslAct", e.getMessage(), e);
 		}
-		/**
-		 * Hiding Action Bar
-		 */
 	}
-
-
-	FragmentTransaction fragMentTra = null;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,15 +64,11 @@ public class KahoslActivity extends Activity implements TabListener {
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		if (tab.getText().equals("WR")) {
-			try {
-				r.removeAllViews();
-			} catch (Exception e) {
-			}
-			wr = new WhatsRecentFragment();
-			fragMentTra.addToBackStack(null);
-			fragMentTra = getFragmentManager().beginTransaction();
-			fragMentTra.add(r.getId(), wr);
-			fragMentTra.commit();
+			if(wr == null)
+				wr = new WhatsRecentFragment();
+			
+			displayFragment(wr);
+
 		} else if (tab.getText().equals("AG")) {
 			try {
 				r.removeAllViews();
@@ -85,16 +86,26 @@ public class KahoslActivity extends Activity implements TabListener {
 			} catch (Exception e) {
 			}
 			addressbook = new AddressBookFragment();
-			fragMentTra.addToBackStack(null);
-			fragMentTra = getFragmentManager().beginTransaction();
-			fragMentTra.add(r.getId(), addressbook);
-			fragMentTra.commit();
+			fTransaction.addToBackStack(null);
+			fTransaction = getFragmentManager().beginTransaction();
+			fTransaction.add(r.getId(), addressbook);
+			fTransaction.commit();
+		}
+	}
+	
+	private void displayFragment(Fragment f) {
+		try {
+			r.removeAllViews();
+		} catch (Exception e) {
+			Log.wtf("Exc: displayFragment KahoslAct", e.getMessage(), e);
 		}
 
+		fTransaction.addToBackStack(null);
+		fTransaction = getFragmentManager().beginTransaction();
+		fTransaction.add(r.getId(), f);
+		fTransaction.commit();
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
 	}
 }

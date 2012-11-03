@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class WhatsRecentFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.wtf("Start module", "What's Recent");
+		Log.wtf("Start module", "Instellingen");
 		
-		return inflater.inflate(R.layout.whats_recent_view, container, false);
+		return inflater.inflate(R.layout.settings_view, container, false);
 	}
 	
 	// TODO : on pause, on create ....
