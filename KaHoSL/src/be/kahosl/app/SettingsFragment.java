@@ -16,5 +16,7 @@ public class SettingsFragment extends Fragment {
 		return inflater.inflate(R.layout.settings_view, container, false);
 	}
 	
-	// TODO : on pause, on create ....
+	public int getIcon(){
+		return android.R.drawable.ic_menu_agenda;
+	}
 }

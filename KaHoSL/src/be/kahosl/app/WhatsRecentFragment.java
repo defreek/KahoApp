@@ -16,5 +16,7 @@ public class WhatsRecentFragment extends Fragment {
 		return inflater.inflate(R.layout.whats_recent_view, container, false);
 	}
 	
-	// TODO : on pause, on create ....
+	public int getIcon(){
+		return android.R.drawable.ic_menu_agenda;
+	}
 }
