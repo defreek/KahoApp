@@ -22,6 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="be.kahosl.whatsrecent.WhatsRecentPreferencesActivity" />
+        <provider
+            android:authorities="be.kahosl.whatsrecent.data.WhatsRecentProvider"
+            android:multiprocess="true"
+            android:name="be.kahosl.whatsrecent.data.WhatsRecentProvider"></provider>
+        <service
+            android:name="be.kahosl.whatsrecent.service.WhatsRecentDownloaderService"></service>
+        <receiver
+            android:name="be.kahosl.whatsrecent.receiver.AlarmReceiver"></receiver>
     </application>
     
 

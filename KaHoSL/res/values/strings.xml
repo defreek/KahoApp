@@ -10,6 +10,15 @@
     <string name="menu_settings">Instellingen</string>
     
 
-
+    <string
+        name="pref_key_flag_background_update">background_update_flag</string>
+    <string
+        name="pref_title_background_update_flag">Allow Updates</string>
+    <string
+        name="pref_summary_background_update_flag">Download announcements list daily</string>
+    <string
+        name="refresh">Refresh</string>
+    <string
+        name="settings">Settings</string>
 
 </resources>

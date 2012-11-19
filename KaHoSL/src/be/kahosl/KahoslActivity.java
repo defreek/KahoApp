@@ -15,8 +15,10 @@ import be.kahosl.addressbook.AddressBookFragment;
 import be.kahosl.agenda.AgendaFragment;
 import be.kahosl.kdisk.KDiskFragment;
 import be.kahosl.whatsrecent.WhatsRecentFragment;
+import be.kahosl.whatsrecent.WhatsRecentListFragment;
 
-public class KahoslActivity extends Activity implements TabListener {
+public class KahoslActivity extends Activity implements TabListener,
+WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 	
 	private RelativeLayout r;
 	private FragmentTransaction fTransaction;
@@ -76,5 +78,10 @@ public class KahoslActivity extends Activity implements TabListener {
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+
+
+	public void onWhatsRecentSelected(String tutUrl) {
+
 	}
 }

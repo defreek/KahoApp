@@ -13,7 +13,6 @@ public class WhatsRecentFragment extends TabFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.wtf("Start module", "What's Recent");
-		
 		return inflater.inflate(R.layout.whats_recent_view, container, false);
 	}
 
