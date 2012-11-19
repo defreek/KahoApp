@@ -12,13 +12,15 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
 
     public static final String TABLE_WHATSRECENT = "whatsrecent";
     public static final String ID = "_id";
+    public static final String COL_ID = "id";
     public static final String COL_TITLE = "title";
     public static final String COL_URL = "url";
 
     private static final String CREATE_TABLE_WHATSRECENT = "CREATE TABLE "
-            + TABLE_WHATSRECENT + " (" + ID
-            + " integer PRIMARY KEY AUTOINCREMENT, " + COL_TITLE
-            + " text NOT NULL, " + COL_URL + " text UNIQUE NOT NULL);";
+            + TABLE_WHATSRECENT + " (" + ID + " integer PRIMARY KEY AUTOINCREMENT, "
+            + COL_ID + " text UNIQUE NOT NULL, "
+    		+ COL_TITLE + " text NOT NULL, "
+            + COL_URL + " text NOT NULL);";
 
     private static final String DB_SCHEMA = CREATE_TABLE_WHATSRECENT;
 
@@ -28,7 +30,7 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DB_SCHEMA);
+    	db.execSQL(DB_SCHEMA);
         //seedData(db);        
     }
 
@@ -37,7 +39,8 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
     	
 		super.onOpen(db);
 		
-		//db.execSQL("DELETE FROM " + TABLE_WHATSRECENT);
+		//db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHATSRECENT);
+		//db.execSQL(DB_SCHEMA);
 	}
 
 	@Override

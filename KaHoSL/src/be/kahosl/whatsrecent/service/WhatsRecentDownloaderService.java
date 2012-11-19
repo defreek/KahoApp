@@ -120,15 +120,22 @@ public class WhatsRecentDownloaderService extends Service {
 		            if (FeedEntry.TAG_ENTRY.equalsIgnoreCase(tag)) {
 		                FeedEntry feedEntry = new FeedEntry(xpp);
 		                
+		                Log.e("feedEntry", feedEntry.toString());
+		                
+		                tutorialData.put(
+                                WhatsRecentDatabase.COL_ID,
+                                feedEntry.id);
 		                tutorialData.put(
                                 WhatsRecentDatabase.COL_URL,
-                                Math.random());
+                                Math.random() + "");
 		                tutorialData.put(
                                 WhatsRecentDatabase.COL_TITLE,
                                 feedEntry.title);
 		                getContentResolver().insert(
                                 WhatsRecentProvider.CONTENT_URI,
                                 tutorialData);
+		                
+		                
 		                
 		                //feedEntry.persist(this);
 		                entries++;
@@ -211,6 +218,13 @@ class FeedEntry {
 					} else if (TAG_PUBLISHED.equalsIgnoreCase(tag)) {
 						published = XmlPullTag(xpp, TAG_PUBLISHED);
 					} else if (TAG_CONTENT.equalsIgnoreCase(tag)) {
+						while ( eventType != XmlPullParser.END_TAG ) {
+			                if ( eventType == XmlPullParser.TEXT ) {
+			                    content = xpp.getText();
+			                } 
+
+			                eventType = xpp.next();
+			            }
 						content = XmlPullTag(xpp, TAG_CONTENT);
 						// extractPreview();
 					} else if (TAG_AUTHOR.equalsIgnoreCase(tag)) {
@@ -244,7 +258,7 @@ class FeedEntry {
 	}
 	
 	public String toString() {
-		return title +" - " + content + " - " + origLink;
+		return title +" - " + id + " - " + origLink;
 	}
 
 	public static String XmlPullTag(XmlPullParser xpp, String tag)

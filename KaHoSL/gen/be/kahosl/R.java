@@ -22,14 +22,16 @@ public final class R {
     }
     public static final class id {
         public static final int FileItem=0x7f080001;
+        public static final int LinearLayout01=0x7f080005;
         public static final int fileList=0x7f080004;
         public static final int file_item_image=0x7f080002;
         public static final int file_item_text=0x7f080003;
+        public static final int list_checkbox=0x7f080006;
         public static final int mainLayout=0x7f080000;
-        public static final int refresh_option_item=0x7f080007;
-        public static final int settings_option_item=0x7f080008;
-        public static final int title=0x7f080005;
-        public static final int whatsrecent_fragment=0x7f080006;
+        public static final int refresh_option_item=0x7f080009;
+        public static final int settings_option_item=0x7f08000a;
+        public static final int title=0x7f080007;
+        public static final int whatsrecent_fragment=0x7f080008;
     }
     public static final class layout {
         public static final int activity_kahosl=0x7f030000;

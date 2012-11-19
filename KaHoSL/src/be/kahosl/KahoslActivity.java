@@ -9,6 +9,7 @@ import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 import be.kahosl.addressbook.AddressBookFragment;
@@ -81,7 +82,7 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 	}
 
 
-	public void onWhatsRecentSelected(String tutUrl) {
-
+	public void onWhatsRecentSelected(String url) {
+		Log.wtf("whatsrecent", "List item clicked");
 	}
 }
