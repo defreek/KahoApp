@@ -4,9 +4,11 @@
     <item
         android:id="@+id/refresh_option_item"
         android:icon="@drawable/ic_menu_refresh"
-        android:title="@string/refresh"></item>
+        android:title="@string/refresh"
+        android:showAsAction="ifRoom|withText"></item>
     <item
         android:id="@+id/settings_option_item"
         android:icon="@drawable/ic_menu_settings"
-        android:title="@string/settings"></item>
+        android:title="@string/settings"
+        android:showAsAction="ifRoom|withText"></item>
 </menu>

@@ -87,7 +87,6 @@ public class WhatsRecentListFragment extends ListFragment implements
 				WhatsRecentDownloaderService.class);
 		refreshIntent
 				.setData(Uri
-						//.parse("http://feeds.feedburner.com/mobile-tuts-summary?format=xml"));
 						.parse("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom"));
 		MenuItem refresh = menu.findItem(R.id.refresh_option_item);
 		refresh.setIntent(refreshIntent);

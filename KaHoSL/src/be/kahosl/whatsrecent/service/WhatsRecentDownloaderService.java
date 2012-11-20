@@ -107,7 +107,7 @@ public class WhatsRecentDownloaderService extends Service {
 		    
 		    xpp.require(XmlPullParser.START_TAG, null, "feed");
 		    
-		    ContentValues tutorialData = new ContentValues();
+		    ContentValues whatsrecentData = new ContentValues();
 		    		    
 		    while (((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT) 
 		    		&& (xpp.getDepth() >= depth)
@@ -122,18 +122,18 @@ public class WhatsRecentDownloaderService extends Service {
 		                
 		                Log.e("feedEntry", feedEntry.toString());
 		                
-		                tutorialData.put(
+		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_ID,
                                 feedEntry.id);
-		                tutorialData.put(
+		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_URL,
                                 Math.random() + "");
-		                tutorialData.put(
+		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_TITLE,
                                 feedEntry.title);
 		                getContentResolver().insert(
                                 WhatsRecentProvider.CONTENT_URI,
-                                tutorialData);
+                                whatsrecentData);
 		                
 		                
 		                
