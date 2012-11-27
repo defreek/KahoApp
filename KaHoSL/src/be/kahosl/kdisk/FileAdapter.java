@@ -3,54 +3,65 @@ package be.kahosl.kdisk;
 import org.apache.commons.net.ftp.FTPFile;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.TextView;
+import be.kahosl.R;
 
-public class FileAdapter extends ArrayAdapter<FTPFile> {
-	
-	
-    private FTPFile[] fileList = new FTPFile[0];
+public class FileAdapter extends BaseAdapter {
 
-    public FileAdapter(Context c, int resource, int textViewResourceId) {
-    	super(c, resource, textViewResourceId);
-    	fileList = null;
+    private Context mContext;
+    private FTPFile[] files;
+
+    public FileAdapter(Context c) {
+        mContext = c;
+        files = null;
+    }
+
+    public int getCount() {
+    	if (files != null)
+    		return files.length;
+    	else
+    		return 1;
+    }
+
+    public Object getItem(int arg0) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return 0;
     }
     
-    @Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-    	
-        TextView label=(TextView)convertView.findViewById(android.R.id.text1);
-        label.setText(fileList[position].getName());
-        
-        //ImageView icon=(ImageView)view.findViewById(android.R.id.listIcon);
-        
-        /*if (DayOfWeek[position]=="Sunday"){
-            icon.setImageResource(R.drawable.file);
-        }else{
-            icon.setImageResource(R.drawable.icon);
-        }
-        TextView desc = (TextView)view.findViewById(R.id.description);
-        if (DayOfWeek[position]=="Sunday"){
-            desc.setText("Description1");
-        }else{
-            desc.setText("desc");
-        }*/
-        
-        return convertView;
-        
-    	/*
-	    TextView label = (TextView) view.;
-        if (arg1 == null) {  // if it's not recycled, initialize some attributes
-            textView = new TextView(mContext);
-            textView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            textView.setPadding(8, 8, 8, 8);
-        } else {
-            textView = (TextView) arg1;
-        }
+    public void updateData(FTPFile[] files) {
+    	this.files = files;
+    	notifyDataSetChanged();
+    }
 
-        textView.setText(fileList[arg0].getName());
-        return textView;*/
-	}
+    public View getView(int position, View convertView, ViewGroup parent) {
+    	TextView fileView;
+    	
+         if (convertView == null) {
+        	 fileView = new TextView(mContext);
+        	 fileView.setLayoutParams(new GridView.LayoutParams(150, 150));
+         } else {
+        	 fileView = (TextView) convertView;
+         }
+         
+    	 if(files == null) {
+    		 fileView.setText("Loading");
+    	 } else {
+    		 fileView.setText(files[position].getName());
+    		 fileView.setCompoundDrawablesWithIntrinsicBounds(0, files[position].isDirectory() ? R.drawable.ic_kdisk_folder : R.drawable.ic_kdisk_file, 0, 0);
+    	 }
+    	 
+    	 fileView.setGravity(Gravity.CENTER);
+    	 
+    	 return fileView;
+    }
 }

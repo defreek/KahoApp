@@ -56,14 +56,17 @@ public class FTPSHandler extends Handler {
 	}
 
 	private void ready() {
-		setStatus(0, "Klaar");
+		status = 0;
+		statusDescription = "Klaar";
+		
+		ui.updateUIFiles(fileList, cwd);
 	}
 	
 	private void setStatus(int status, String statusDescription) {
 		this.status = status;
 		this.statusDescription = statusDescription;
 		
-		ui.updateUI();
+		ui.updateUIStatus(statusDescription);
 	}
 	
 	public FTPFile[] getList() {

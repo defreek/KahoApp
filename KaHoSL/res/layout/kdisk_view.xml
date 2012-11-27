@@ -6,7 +6,8 @@
     android:orientation="vertical" >
     
   <!-- view voor K-Schijf -->
-  <TextView android:text="@string/kdisk"
+  <TextView android:id="@+id/status"
+      		android:text="@string/kdisk"
             android:padding="15dip"
             android:textSize="18dip"
             android:layout_width="fill_parent"

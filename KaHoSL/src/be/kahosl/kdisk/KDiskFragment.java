@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.TextView;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
@@ -14,24 +16,29 @@ public class KDiskFragment extends TabFragment {
 	
 	private FTPSHandler ftpHandler;
 	private FileAdapter fileAdapter;
+	private TextView status;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.wtf("Start module", "K-Schijf");
+		super.onCreate(savedInstanceState);
 		
-		//fileAdapter = new FileAdapter(getActivity(), R.id.fileList, android.R.layout.simple_list_item_1);
-		
-		//GridView gridview = (GridView) kDiskView.findViewById(R.id.fileList);
-	    //gridview.setAdapter(fileAdapter);
-		
+        View kDiskView = inflater.inflate(R.layout.kdisk_view, container, false);
+        
+        status = (TextView) kDiskView.findViewById(R.id.status);
+        status.setText(R.string.kdisk);
+        
+        GridView gridView = (GridView) kDiskView.findViewById(R.id.fileList);
+        fileAdapter = new FileAdapter(kDiskView.getContext());
+        gridView.setAdapter(fileAdapter);
+        
 		// TODO: setItemonclicklistener
-		
 		// TODO: updaten login credentials indien gewijzigd
+        
 		ftpHandler = new FTPSHandler("ftps.ikdoeict.be", "jarno.goossens@kahosl.be", "J7tej7ET", this);
-		
 		ftpHandler.connect();
 
-		return inflater.inflate(R.layout.kdisk_view, container, false);
+        return kDiskView;
 	}
 
 	@Override
@@ -39,30 +46,20 @@ public class KDiskFragment extends TabFragment {
 		return R.drawable.ic_menu_kdisk;
 	}
 	
-	public void updateUI(){
-		Log.wtf("KDISK updateUI", ftpHandler.getStatusDescription());
-		
-		if (ftpHandler.isReady())
-			showFileList();
+	public void updateUIStatus(final String statusDescription){
+		this.getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				status.setText(statusDescription);
+			}
+		});
 	}
 	
-	public void showFileList(){
-		FTPFile[] fileList = ftpHandler.getList();
-        int length = fileList.length;
-
-        for (int i = 0; i < length; i++) {
-            String name = fileList[i].toString();
-            boolean isFile = fileList[i].isFile();
-
-            if (isFile) {
-                Log.wtf("list", "File : " + name);
-            }
-            else {
-                Log.wtf("list", "Directory : " + name);
-            }
-        }
-        
-
-        //fileAdapter.addAll(fileList);
+	public void updateUIFiles(final FTPFile[] files, final String cwd){
+		this.getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				fileAdapter.updateData(files);
+				status.setText(cwd);
+			}
+		});
 	}
 }
