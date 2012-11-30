@@ -5,10 +5,10 @@
     android:orientation="vertical" >
     
   <!-- view voor Agenda -->
-  <TextView android:text="@string/agenda"
-            android:padding="15dip"
-            android:textSize="18dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+
+    <CalendarView
+        android:id="@+id/calCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
   
 </LinearLayout>
