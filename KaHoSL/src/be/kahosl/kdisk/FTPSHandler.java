@@ -8,6 +8,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 
 import android.os.Handler;
+import android.util.Log;
 
 public class FTPSHandler extends Handler {
 	
@@ -26,6 +27,7 @@ public class FTPSHandler extends Handler {
 	
 	// Current Working Directory
 	private String cwd;
+	private String root;
 	
 	// Folders and files in cwd
 	private FTPFile[] fileList;
@@ -38,20 +40,21 @@ public class FTPSHandler extends Handler {
 		this.ui = ui;
 		
 		// Root directory
-		cwd = "/kschijf/" + username.substring(0, username.indexOf('@'));
+		root = "/kschijf/" + username.substring(0, username.indexOf('@'));
+		cwd = root;
 	}
 	
 	
 	// Status bewerkingen
-	public int getStatus() {
+	protected int getStatus() {
 		return status;
 	}
 	
-	public boolean isReady() {
+	protected boolean isReady() {
 		return status == 0;
 	}
 	
-	public String getStatusDescription() {
+	protected String getStatusDescription() {
 		return statusDescription;
 	}
 
@@ -59,7 +62,7 @@ public class FTPSHandler extends Handler {
 		status = 0;
 		statusDescription = "Klaar";
 		
-		ui.updateUIFiles(fileList, cwd);
+		ui.updateUIFiles(fileList, getCWD());
 	}
 	
 	private void setStatus(int status, String statusDescription) {
@@ -69,16 +72,16 @@ public class FTPSHandler extends Handler {
 		ui.updateUIStatus(statusDescription);
 	}
 	
-	public FTPFile[] getList() {
+	protected FTPFile[] getList() {
 		return fileList;
 	}
 	
-	public String getCWD() {
-		return cwd;
+	protected String getCWD() {
+		return "K:" + cwd.substring(root.length());
 	}
 	
 	
-	// Verbind bewerkingen
+	// Connectie bewerkingen
 	protected void connect() {
 		connect(host, username, password);
 	}
@@ -142,13 +145,16 @@ public class FTPSHandler extends Handler {
 			
 			public void run() {
 				
-				// TODO: test connectie onderbroken
+				// TODO: testen connectie onderbroken
 				if(!ftp.isConnected())
 					connect();
 					
 				try {
 					ftp.changeWorkingDirectory(path);
 					fileList = ftp.listFiles();
+					cwd = ftp.printWorkingDirectory();
+					
+					Log.wtf("change", cwd);
 					
 					ready();
 					
@@ -160,5 +166,9 @@ public class FTPSHandler extends Handler {
 		};
 
 		new Thread(r).start();
+	}
+	
+	protected boolean inRoot() {
+		return cwd.equals(root);
 	}
 }

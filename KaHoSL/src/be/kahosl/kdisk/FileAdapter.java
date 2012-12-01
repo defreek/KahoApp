@@ -3,6 +3,7 @@ package be.kahosl.kdisk;
 import org.apache.commons.net.ftp.FTPFile;
 
 import android.content.Context;
+import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,27 +17,30 @@ public class FileAdapter extends BaseAdapter {
     private Context mContext;
     private FTPFile[] files;
 
+    // TODO: Lege map
+    
     public FileAdapter(Context c) {
         mContext = c;
-        files = null;
+        files = new FTPFile[0];
     }
 
     public int getCount() {
-    	if (files != null)
-    		return files.length;
-    	else
-    		return 1;
+   		return files.length;
     }
+    
+    @Override
+	public boolean isEmpty() {
+		return files.length == 0;
+	}
 
-    public Object getItem(int arg0) {
-        // TODO Auto-generated method stub
-        return null;
+    public FTPFile getItem(int position) {
+        return files[position];
     }
-
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    
+	public long getItemId(int position) {
+		// Not implemented
+		return 0;
+	}
     
     public void updateData(FTPFile[] files) {
     	this.files = files;
@@ -48,18 +52,15 @@ public class FileAdapter extends BaseAdapter {
     	
          if (convertView == null) {
         	 fileView = new TextView(mContext);
-        	 fileView.setLayoutParams(new GridView.LayoutParams(150, 150));
+        	 fileView.setLayoutParams(new GridView.LayoutParams(160, 160));
+        	 fileView.setMaxLines(2);
+        	 fileView.setEllipsize(TruncateAt.END);
          } else {
         	 fileView = (TextView) convertView;
          }
-         
-    	 if(files == null) {
-    		 fileView.setText("Loading");
-    	 } else {
-    		 fileView.setText(files[position].getName());
-    		 fileView.setCompoundDrawablesWithIntrinsicBounds(0, files[position].isDirectory() ? R.drawable.ic_kdisk_folder : R.drawable.ic_kdisk_file, 0, 0);
-    	 }
-    	 
+
+		 fileView.setText(files[position].getName());
+		 fileView.setCompoundDrawablesWithIntrinsicBounds(0, files[position].isDirectory() ? R.drawable.ic_kdisk_folder : R.drawable.ic_kdisk_file, 0, 0);
     	 fileView.setGravity(Gravity.CENTER);
     	 
     	 return fileView;

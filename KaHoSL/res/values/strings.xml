@@ -9,6 +9,7 @@
     <string name="kdisk">K-Schijf</string>
     <string name="menu_settings">Instellingen</string>
     
+    <string name="kdisk_back">Omhoog</string>
 
     <string
         name="pref_key_flag_background_update">background_update_flag</string>
