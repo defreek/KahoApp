@@ -1,14 +1,20 @@
 package be.kahosl.kdisk;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 
 public class FTPSHandler extends Handler {
 	
@@ -139,7 +145,7 @@ public class FTPSHandler extends Handler {
 	}
 	
 	protected void changeWorkingDirectory(final String path) {
-		setStatus(-1, "Map veranderen");
+		setStatus(-1, "Map openen");
 		
 		Runnable r = new Runnable() {
 			
@@ -153,9 +159,7 @@ public class FTPSHandler extends Handler {
 					ftp.changeWorkingDirectory(path);
 					fileList = ftp.listFiles();
 					cwd = ftp.printWorkingDirectory();
-					
-					Log.wtf("change", cwd);
-					
+
 					ready();
 					
 				} catch (IOException e) {
@@ -170,5 +174,41 @@ public class FTPSHandler extends Handler {
 	
 	protected boolean inRoot() {
 		return cwd.equals(root);
+	}
+	
+	
+	// Download bewerkingen
+	protected void getFile(final FTPFile file) {
+		setStatus(-1, "Bestand downloaden");
+		
+		Runnable r = new Runnable() {
+			
+			public void run() {
+				
+				try {
+					File localFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), file.getName());
+					OutputStream output = new FileOutputStream(localFile);
+					
+					ftp.retrieveFile(file.getName(), output);
+					output.close();
+					
+					ready();
+					
+					// Open bestand met standaardapplicatie
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.setData(Uri.fromFile(localFile));
+					ui.getActivity().startActivity(intent);
+				      
+				} catch (FileNotFoundException e) {
+					// TODO
+					setStatus(-1, "TODO ERROR");
+				} catch (IOException e) {
+					setStatus(-1, "TODO ERROR");
+				}
+			}
+		};
+
+		new Thread(r).start();
 	}
 }
