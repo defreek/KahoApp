@@ -11,7 +11,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.RelativeLayout;
 import be.kahosl.addressbook.AddressBookFragment;
 import be.kahosl.agenda.AgendaFragment;
@@ -23,8 +22,8 @@ public class KahoslActivity extends Activity implements TabListener,
 WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 	
 	private RelativeLayout r;
-	private FragmentTransaction fTransaction;
 	private LinkedHashMap<String, TabFragment> fragments;
+	private Fragment active;
 	
 	
     @Override
@@ -42,7 +41,6 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
         fragments.put("Instellingen", new SettingsFragment());
         
 		r = (RelativeLayout) findViewById(R.id.mainLayout);
-		fTransaction = getFragmentManager().beginTransaction();
 		ActionBar aBar = getActionBar();
 	
 		// Tabs aanmaken
@@ -63,26 +61,37 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 		aBar.show();
 	}
     
-
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_kahosl, menu);
-		return true;
-	}
-
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+	public void onBackPressed() {
+		// Activity niet afsluiten
+		moveTaskToBack(true);
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		fTransaction = getFragmentManager().beginTransaction();
-		fTransaction.replace(r.getId(),(Fragment) fragments.get(tab.getTag()));
+		FragmentTransaction fTransaction = getFragmentManager().beginTransaction();
+		
+		// Huidig fragment verbergen
+		if(active != null)
+			fTransaction.hide(active);
+		
+		// Nieuw fragment tonen
+		active = (Fragment) fragments.get(tab.getTag());
+		if(active.isHidden())
+			fTransaction.show(active);
+		else
+			fTransaction.add(r.getId(), active);
+
 		fTransaction.commit();
 	}
 
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// Not implemented
 	}
-
-
+	
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// Not implemented
+	}
+	
 	public void onWhatsRecentSelected(String url) {
 		Log.wtf("whatsrecent", "List item clicked");
 	}

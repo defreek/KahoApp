@@ -31,26 +31,11 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	private TextView status;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.wtf("Start module", "K-Schijf");
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// Views
-        View kDiskView = inflater.inflate(R.layout.kdisk_view, container, false);
-        status = (TextView) kDiskView.findViewById(R.id.status);
-        GridView gridView = (GridView) kDiskView.findViewById(R.id.fileList);
-        
-        // Contextmenu
-        registerForContextMenu(gridView);
-        
-        // Listeners
-        gridView.setOnItemClickListener(this);
-        gridView.setOnItemLongClickListener(this);
-        ((ImageButton) kDiskView.findViewById(R.id.btnUp)).setOnClickListener(this);
-        
+		Log.wtf("Create module", "K-Schijf");
         // Adapter
-        fileAdapter = new FileAdapter(kDiskView.getContext());
-        gridView.setAdapter(fileAdapter);
+        fileAdapter = new FileAdapter(getActivity());
         
         // Preferences
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -59,9 +44,28 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 		ftpHandler = new FTPSHandler("ftps.ikdoeict.be", preferences.getString("pref_login", ""), preferences.getString("pref_pass", ""), this);
 		ftpHandler.connect();
 		
-		
 		// TODO: updaten login credentials indien gewijzigd
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.wtf("Create view module", "K-Schijf");
+		super.onCreate(savedInstanceState);
 		
+		// Views
+        View kDiskView = inflater.inflate(R.layout.kdisk_view, container, false);
+        status = (TextView) kDiskView.findViewById(R.id.status);
+        GridView gridView = (GridView) kDiskView.findViewById(R.id.fileList);
+        gridView.setAdapter(fileAdapter);
+        
+        // Contextmenu
+        registerForContextMenu(gridView);
+        
+        // Listeners
+        gridView.setOnItemClickListener(this);
+        gridView.setOnItemLongClickListener(this);
+        ((ImageButton) kDiskView.findViewById(R.id.btnUp)).setOnClickListener(this);
+
         return kDiskView;
 	}
 
@@ -74,7 +78,8 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	public void updateUIStatus(final String statusDescription){
 		this.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				status.setText(statusDescription);
+				if(status != null)
+					status.setText(statusDescription);
 			}
 		});
 	}
@@ -83,7 +88,8 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 		this.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
 				fileAdapter.updateData(files);
-				status.setText(cwd);
+				if(status != null)
+					status.setText(cwd);
 			}
 		});
 	}

@@ -71,7 +71,11 @@ public final class R {
         public static final int pref_title_background_update_flag=0x7f05000e;
         public static final int refresh=0x7f050010;
         public static final int settings=0x7f050011;
+        /**  Main 
+         */
         public static final int title_activity_kahosl=0x7f050000;
+        /**  Tabs 
+         */
         public static final int whats_recent=0x7f050002;
     }
     public static final class style {
