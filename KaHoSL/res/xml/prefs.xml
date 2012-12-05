@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="Background Updating">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    
+    <PreferenceCategory android:title="Login gegevens">
+        
+        <EditTextPreference 
+            android:title="@string/pref_login"
+        	android:key="pref_login"
+        	android:summary="@string/pref_login_desc"
+        	android:defaultValue="@string/login_domain"	/>
+        
+        <EditTextPreference 
+            android:title="@string/pref_pass"
+        	android:key="pref_pass"
+        	android:summary="@string/pref_pass_desc"
+        	android:inputType="textPassword" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Background Updating">
+        
         <CheckBoxPreference
             android:summary="@string/pref_summary_background_update_flag"
             android:title="@string/pref_title_background_update_flag"
             android:key="@string/pref_key_flag_background_update" />
     </PreferenceCategory>
+    
 </PreferenceScreen>

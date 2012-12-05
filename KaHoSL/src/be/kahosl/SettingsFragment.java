@@ -1,22 +1,17 @@
 package be.kahosl;
 
-import be.kahosl.R;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.preference.PreferenceFragment;
 
-public class SettingsFragment extends TabFragment {
+public class SettingsFragment extends PreferenceFragment implements TabFragment {
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.wtf("Start module", "Instellingen");
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		
-		return inflater.inflate(R.layout.settings_view, container, false);
-	}
+		addPreferencesFromResource(R.xml.prefs);
+	}	
 	
-	@Override
 	public int getIcon(){
 		return R.drawable.ic_menu_settings;
 	}

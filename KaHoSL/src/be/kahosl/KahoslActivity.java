@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
@@ -74,7 +75,7 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		fTransaction = getFragmentManager().beginTransaction();
-		fTransaction.replace(r.getId(), fragments.get(tab.getTag()));
+		fTransaction.replace(r.getId(),(Fragment) fragments.get(tab.getTag()));
 		fTransaction.commit();
 	}
 

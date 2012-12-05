@@ -1,16 +1,31 @@
 <resources>
     
+	<!-- Main -->
     <string name="title_activity_kahosl">KaHoSL</string>
     <string name="app_name">KaHoSL</string>
     
+    <!-- Tabs -->
     <string name="whats_recent">What\'s Recent?</string>
     <string name="agenda">Agenda</string>
     <string name="address_book">Adresboek</string>
     <string name="kdisk">K-Schijf</string>
     <string name="menu_settings">Instellingen</string>
     
+	<!-- K-Schijf -->
     <string name="kdisk_back">Omhoog</string>
+    
+	<!-- Instellingen -->
+	<string name="pref_login">E-mailadres</string>
+	<string name="pref_login_desc">Het e-mailadres dat u gebruikt om aan te melden op KaHoSL.</string>
+	<string name="login_domain">\@kahosl.be</string>
+	
+    <string name="pref_pass">Wachtwoord</string>
+    <string name="pref_pass_desc">Het wachtwoord dat u gebruikt om aan te melden op KaHoSL.</string>
 
+    
+    
+    
+    
     <string
         name="pref_key_flag_background_update">background_update_flag</string>
     <string

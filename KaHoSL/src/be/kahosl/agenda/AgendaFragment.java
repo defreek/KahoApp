@@ -1,5 +1,6 @@
 package be.kahosl.agenda;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,7 @@ import android.widget.CalendarView;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
-public class AgendaFragment extends TabFragment {
+public class AgendaFragment extends Fragment implements TabFragment {
 	private CalendarView cv;
 	
 	@Override
@@ -24,7 +25,6 @@ public class AgendaFragment extends TabFragment {
 		return inflater.inflate(R.layout.agenda_view, container, false);
 	}
 	
-	@Override
 	public int getIcon(){
 		return R.drawable.ic_menu_agenda;
 	}

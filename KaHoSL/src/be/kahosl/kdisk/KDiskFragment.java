@@ -2,7 +2,10 @@ package be.kahosl.kdisk;
 
 import org.apache.commons.net.ftp.FTPFile;
 
+import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -21,7 +24,7 @@ import android.widget.TextView;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
-public class KDiskFragment extends TabFragment implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class KDiskFragment extends Fragment implements TabFragment, OnItemClickListener, OnItemLongClickListener, OnClickListener {
 	
 	private FTPSHandler ftpHandler;
 	private FileAdapter fileAdapter;
@@ -49,15 +52,19 @@ public class KDiskFragment extends TabFragment implements OnItemClickListener, O
         fileAdapter = new FileAdapter(kDiskView.getContext());
         gridView.setAdapter(fileAdapter);
         
+        // Preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        
         // FTP Handler
-		ftpHandler = new FTPSHandler("ftps.ikdoeict.be", "jarno.goossens@kahosl.be", "J7tej7ET", this);
+		ftpHandler = new FTPSHandler("ftps.ikdoeict.be", preferences.getString("pref_login", ""), preferences.getString("pref_pass", ""), this);
 		ftpHandler.connect();
-			// TODO: updaten login credentials indien gewijzigd
+		
+		
+		// TODO: updaten login credentials indien gewijzigd
 		
         return kDiskView;
 	}
 
-	@Override
 	public int getIcon(){
 		return R.drawable.ic_menu_kdisk;
 	}
