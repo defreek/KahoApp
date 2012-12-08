@@ -2,7 +2,7 @@ package be.kahosl.kdisk;
 
 import android.util.Log;
 
-public abstract class KDiskException extends Exception {
+public class KDiskException extends Exception {
 	
 	private static final long serialVersionUID = -8905427340964691972L;
 	

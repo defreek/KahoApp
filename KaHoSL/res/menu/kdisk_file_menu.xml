@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:id="@+id/kdisk_cm_open"
+        android:title="@string/kdisk_open" />
+    
+    <item
+        android:id="@+id/kdisk_cm_delete"
+        android:title="@string/kdisk_delete" />
+    
+<!--     <item -->
+<!--         android:id="@+id/kdisk_cm_cut" -->
+<!--         android:title="@string/kdisk_cut" /> -->
+    
+</menu>

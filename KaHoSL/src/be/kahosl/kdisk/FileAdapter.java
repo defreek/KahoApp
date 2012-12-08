@@ -16,8 +16,9 @@ public class FileAdapter extends BaseAdapter {
 
     private Context mContext;
     private FTPFile[] files;
+    private FTPFile selected;
 
-    // TODO: Lege map
+    // TODO: Lege map tonen
     
     public FileAdapter(Context c) {
         mContext = c;
@@ -41,8 +42,16 @@ public class FileAdapter extends BaseAdapter {
 		// Not implemented
 		return 0;
 	}
-    
-    public void updateData(FTPFile[] files) {
+	
+    public FTPFile getSelected() {
+		return selected;
+	}
+
+	public void setSelected(int position) {
+		selected = files[position];
+	}
+
+	public void updateData(FTPFile[] files) {
     	this.files = files;
     	notifyDataSetChanged();
     }
