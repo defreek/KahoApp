@@ -5,10 +5,16 @@
     android:orientation="vertical" >
     
   <!-- View voor adresboek -->
-  <TextView android:text="@string/address_book"
-            android:padding="15dip"
-            android:textSize="18dip"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
-  
+	<SearchView
+	    android:id="@+id/searchbox"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp" />
+	
+	<ListView
+		android:id="@+id/searchList"
+		android:layout_width="match_parent" 
+		android:layout_height="match_parent"
+		android:padding="10dp" />
+
 </LinearLayout>

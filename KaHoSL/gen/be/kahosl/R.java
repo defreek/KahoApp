@@ -24,29 +24,34 @@ public final class R {
         public static final int ic_menu_whats_recent=0x7f02000a;
     }
     public static final class id {
-        public static final int LinearLayout01=0x7f080006;
-        public static final int btnUp=0x7f080002;
-        public static final int calCalendar=0x7f080001;
-        public static final int fileList=0x7f080005;
-        public static final int horLine=0x7f080004;
-        public static final int kdisk_cm_delete=0x7f08000b;
-        public static final int kdisk_cm_open=0x7f08000a;
-        public static final int list_checkbox=0x7f080007;
+        public static final int LinearLayout01=0x7f08000a;
+        public static final int btnUp=0x7f080006;
+        public static final int calCalendar=0x7f080005;
+        public static final int fileList=0x7f080009;
+        public static final int horLine=0x7f080008;
+        public static final int kdisk_cm_delete=0x7f08000f;
+        public static final int kdisk_cm_open=0x7f08000e;
+        public static final int list_checkbox=0x7f08000b;
+        public static final int mail=0x7f080002;
         public static final int mainLayout=0x7f080000;
-        public static final int refresh_option_item=0x7f08000c;
-        public static final int settings_option_item=0x7f08000d;
-        public static final int status=0x7f080003;
-        public static final int title=0x7f080008;
-        public static final int whatsrecent_fragment=0x7f080009;
+        public static final int name=0x7f080001;
+        public static final int refresh_option_item=0x7f080010;
+        public static final int searchList=0x7f080004;
+        public static final int searchbox=0x7f080003;
+        public static final int settings_option_item=0x7f080011;
+        public static final int status=0x7f080007;
+        public static final int title=0x7f08000c;
+        public static final int whatsrecent_fragment=0x7f08000d;
     }
     public static final class layout {
         public static final int activity_kahosl=0x7f030000;
-        public static final int address_book_view=0x7f030001;
-        public static final int agenda_view=0x7f030002;
-        public static final int kdisk_view=0x7f030003;
-        public static final int list_item=0x7f030004;
-        public static final int settings_view=0x7f030005;
-        public static final int whats_recent_view=0x7f030006;
+        public static final int address_book_item=0x7f030001;
+        public static final int address_book_view=0x7f030002;
+        public static final int agenda_view=0x7f030003;
+        public static final int kdisk_view=0x7f030004;
+        public static final int list_item=0x7f030005;
+        public static final int settings_view=0x7f030006;
+        public static final int whats_recent_view=0x7f030007;
     }
     public static final class menu {
         public static final int activity_kahosl=0x7f070000;
