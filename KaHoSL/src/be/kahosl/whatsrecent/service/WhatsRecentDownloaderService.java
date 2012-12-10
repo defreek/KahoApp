@@ -13,7 +13,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.util.Log;
 import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
 import be.kahosl.whatsrecent.data.WhatsRecentProvider;
@@ -63,7 +62,7 @@ public class WhatsRecentDownloaderService extends Service {
 			XmlPullParserFactory factory = null;
 		    StringBuilder out = new StringBuilder();
 		    int entries = 0;
-
+		    
 		    try {
 		        factory = XmlPullParserFactory.newInstance();
 		        factory.setNamespaceAware(true);
@@ -109,9 +108,7 @@ public class WhatsRecentDownloaderService extends Service {
 		    
 		    ContentValues whatsrecentData = new ContentValues();
 		    		    
-		    while (((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT) 
-		    		&& (xpp.getDepth() >= depth)
-		    		) {
+		    while ((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT) {
 		        // loop invariant: At this point, the parser is not sitting on
 		        // end-of-document, and is at a level deeper than where it started.
 		        if (eventType == XmlPullParser.START_TAG) {
@@ -127,10 +124,22 @@ public class WhatsRecentDownloaderService extends Service {
                                 feedEntry.id);
 		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_URL,
-                                Math.random() + "");
+                                feedEntry.link);
 		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_TITLE,
                                 feedEntry.title);
+		                whatsrecentData.put(
+                                WhatsRecentDatabase.COL_COURSE,
+                                feedEntry.course);
+		                whatsrecentData.put(
+                                WhatsRecentDatabase.COL_AUTHOR,
+                                feedEntry.author);
+		                whatsrecentData.put(
+                                WhatsRecentDatabase.COL_DATE,
+                                feedEntry.published);
+		                whatsrecentData.put(
+                                WhatsRecentDatabase.COL_VISIBLE,
+                                1);
 		                getContentResolver().insert(
                                 WhatsRecentProvider.CONTENT_URI,
                                 whatsrecentData);
@@ -162,30 +171,20 @@ public class WhatsRecentDownloaderService extends Service {
 class FeedEntry {
 	String id;
 	String published;
-	String updated;
-	// Timestamp lastRead;
 	String title;
-	String subtitle;
-	String authorName;
-	int contentType;
-	String content;
-	String preview;
-	String origLink;
-	String thumbnailUri;
+	String author;
+	String type;
+	String course;
+	String link;
 	// Media media;
 
 	static final String TAG_ENTRY = "entry";
 	static final String TAG_ENTRY_ID = "id";
 	static final String TAG_TITLE = "title";
-	static final String TAG_SUBTITLE = "subtitle";
-	static final String TAG_UPDATED = "updated";
 	static final String TAG_PUBLISHED = "published";
 	static final String TAG_AUTHOR = "author";
 	static final String TAG_CONTENT = "content";
-	static final String TAG_TYPE = "type";
 	static final String TAG_ORIG_LINK = "link";
-	static final String TAG_THUMBNAIL = "thumbnail";
-	static final String ATTRIBUTE_URL = "url";
 
 	/**
 	 * Create a FeedEntry by pulling its bits out of an XML Pull Parser. Side
@@ -201,51 +200,22 @@ class FeedEntry {
 		try {
 			xpp.require(XmlPullParser.START_TAG, null, TAG_ENTRY);
 						
-			while (((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT)
-					&& (xpp.getDepth() >= depth)) {
+			while ((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT) {
 				
 				if (eventType == XmlPullParser.START_TAG) {
 					String tag = xpp.getName();
-					
 					if (TAG_ENTRY_ID.equalsIgnoreCase(tag)) {
 						id = XmlPullTag(xpp, TAG_ENTRY_ID);
 					} else if (TAG_TITLE.equalsIgnoreCase(tag)) {
 						title = XmlPullTag(xpp, TAG_TITLE);
-					} else if (TAG_SUBTITLE.equalsIgnoreCase(tag)) {
-						subtitle = XmlPullTag(xpp, TAG_SUBTITLE);
-					} else if (TAG_UPDATED.equalsIgnoreCase(tag)) {
-						updated = XmlPullTag(xpp, TAG_UPDATED);
 					} else if (TAG_PUBLISHED.equalsIgnoreCase(tag)) {
 						published = XmlPullTag(xpp, TAG_PUBLISHED);
 					} else if (TAG_CONTENT.equalsIgnoreCase(tag)) {
-						while ( eventType != XmlPullParser.END_TAG ) {
-			                if ( eventType == XmlPullParser.TEXT ) {
-			                    content = xpp.getText();
-			                } 
-
-			                eventType = xpp.next();
-			            }
-						content = XmlPullTag(xpp, TAG_CONTENT);
+						
+						readContent(xpp);
 						// extractPreview();
-					} else if (TAG_AUTHOR.equalsIgnoreCase(tag)) {
-						// Skip author for now -- it is complicated
-//						int authorDepth = xpp.getDepth();
-//						assert (authorDepth == 3);
-//						xpp.require(XmlPullParser.START_TAG, null, TAG_AUTHOR);
-//						while (((eventType = xpp.next()) != XmlPullParser.END_DOCUMENT)
-//								&& (xpp.getDepth() > authorDepth)) {
-//						}
-//						assert (xpp.getDepth() == 3);
-//						xpp.require(XmlPullParser.END_TAG, null, TAG_AUTHOR);
-
 					} else if (TAG_ORIG_LINK.equalsIgnoreCase(tag)) {
-						origLink = XmlPullTag(xpp, TAG_ORIG_LINK);
-					} else if (TAG_THUMBNAIL.equalsIgnoreCase(tag)) {
-//						thumbnailUri = XmlPullAttribute(xpp, tag, null,
-//								ATTRIBUTE_URL);
-					} else {
-						@SuppressWarnings("unused")
-						String throwAway = XmlPullTag(xpp, tag);
+						link = readLink(xpp);
 					}
 				}
 			} // while
@@ -257,28 +227,66 @@ class FeedEntry {
 		assert (xpp.getDepth() == 2);
 	}
 	
+	private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
+		parser.require(XmlPullParser.START_TAG, null, "link");
+		
+		if (parser.getAttributeValue(null, "rel").equals("alternate")) {
+			link = "https://cygnus.cc.kuleuven.be" + parser.getAttributeValue(null, "href");
+		}
+	    return link;
+	}
+	
+	private void readContent(XmlPullParser parser) throws IOException, XmlPullParserException {
+		parser.require(XmlPullParser.START_TAG, null, "content");
+		
+		while (!parser.getName().equalsIgnoreCase("p")) {
+			parser.nextTag();
+		}
+		parser.nextTag();
+		parser.next();
+		parser.next();
+		parser.next();
+		
+		// type
+		type = parser.getText().replaceAll("[ :]", "");
+		
+		parser.nextTag();
+		parser.nextTag();
+		parser.nextTag();
+		parser.next();
+		parser.next();
+		parser.next();
+		// title again - already have that
+		parser.nextTag();
+		parser.nextTag();
+		parser.nextTag();
+		parser.next();
+		parser.next();
+		parser.next();
+		//course
+		course = parser.getText().replaceAll("^\\s+:\\s+-+\\s+", "").replaceAll("\n", "");
+		
+		parser.nextTag();
+		parser.nextTag();
+		parser.nextTag();
+		parser.next();
+		parser.next();
+		parser.next();
+		
+		//author
+		author = parser.getText().replaceAll("[ :]", "").replaceAll("\n", "");
+		
+	    parser.require(XmlPullParser.END_TAG, null, "content");
+	}
+	
 	public String toString() {
-		return title +" - " + id + " - " + origLink;
+		return title +" - " + id + " - " + link + " - " + course + " - " +  author + " - " + published;
 	}
 
 	public static String XmlPullTag(XmlPullParser xpp, String tag)
 			throws XmlPullParserException, IOException {
 		xpp.require(XmlPullParser.START_TAG, null, tag);
 		String itemText = xpp.nextText();
-		if (xpp.getEventType() != XmlPullParser.END_TAG) {
-			xpp.nextTag();
-		}
-		xpp.require(XmlPullParser.END_TAG, null, tag);
-		return itemText;
-	}
-
-	public static String XmlPullAttribute(XmlPullParser xpp, String tag,
-			String namespace, String name) throws XmlPullParserException,
-			IOException {
-		assert (!TextUtils.isEmpty(tag));
-		assert (!TextUtils.isEmpty(name));
-		xpp.require(XmlPullParser.START_TAG, null, tag);
-		String itemText = xpp.getAttributeValue(namespace, name);
 		if (xpp.getEventType() != XmlPullParser.END_TAG) {
 			xpp.nextTag();
 		}

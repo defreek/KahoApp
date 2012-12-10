@@ -18,7 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // start the download
         Intent downloader = new Intent(context, WhatsRecentDownloaderService.class);
         downloader.setData(Uri
-                .parse("http://feeds.feedburner.com/MobileTuts?format=xml"));
+                .parse("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom"));
         context.startService(downloader);
     }
 
