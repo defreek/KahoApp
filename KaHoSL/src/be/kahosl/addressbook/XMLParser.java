@@ -1,5 +1,7 @@
 package be.kahosl.addressbook;
 
+import java.net.URLEncoder;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -22,13 +24,14 @@ public class XMLParser {
 		this.ui = ui;
 	}
 	
-	public void searchContacts(final CharSequence query) {
+	public void searchContacts(final String query) {
 		Runnable r = new Runnable() {
 			
 			public void run() {
 				try {
 					// pr_kahosl.ikdoeict.be -> underscores niet ondersteund
-					HttpGet uri = new HttpGet("http://jarnogoossens.ikdoeict.be/kahosl.php?q=" +  query);
+					
+					HttpGet uri = new HttpGet("http://jarnogoossens.ikdoeict.be/kahosl.php?q=" + URLEncoder.encode(query, "UTF-8"));
 			
 					DefaultHttpClient client = new DefaultHttpClient();
 					HttpResponse resp = client.execute(uri);

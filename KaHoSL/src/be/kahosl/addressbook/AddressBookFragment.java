@@ -1,17 +1,23 @@
 package be.kahosl.addressbook;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
-public class AddressBookFragment extends Fragment implements TabFragment, OnQueryTextListener {
+public class AddressBookFragment extends Fragment implements TabFragment, OnQueryTextListener, OnItemClickListener {
 	
 	private XMLParser xml;
 	private ContactAdapter contactAdapter;
@@ -34,9 +40,16 @@ public class AddressBookFragment extends Fragment implements TabFragment, OnQuer
 
 		// Views
         View abView = inflater.inflate(R.layout.address_book_view, container, false);
-        ((SearchView) abView.findViewById(R.id.searchbox)).setOnQueryTextListener(this);
-        ((ListView) abView.findViewById(R.id.searchList)).setAdapter(contactAdapter);
+        ListView searchList = (ListView) abView.findViewById(R.id.searchList);
+        SearchView searchBox = (SearchView) abView.findViewById(R.id.searchbox);
         
+        // Adapter
+        searchList.setAdapter(contactAdapter);
+        
+        // Listeners
+        searchList.setOnItemClickListener(this);
+        searchBox.setOnQueryTextListener(this);
+
 		return abView;
 	}
 	
@@ -52,12 +65,35 @@ public class AddressBookFragment extends Fragment implements TabFragment, OnQuer
 		return R.drawable.ic_menu_address_book;
 	}
 
+	// Zoekterm aan het ingeven
 	public boolean onQueryTextChange(String q) {
+		if(q.length() > 2)
+			xml.searchContacts(q);
+		
 		return false;
 	}
 
+	// Zoekterm ingegeven
 	public boolean onQueryTextSubmit(String q) {
-		xml.searchContacts(q);
+		if(q.length() > 2)
+			xml.searchContacts(q);
+		
+		// Hide keyboard
+        InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mgr.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        
 		return false;
+	}
+
+	// Contact clicked
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        newMail(contactAdapter.getItem(position));
+	}
+	
+	// Nieuwe mail maken naar contact
+	public void newMail(Contact c) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:" + c.getMail()));
+        startActivity(intent);
 	}
 }
