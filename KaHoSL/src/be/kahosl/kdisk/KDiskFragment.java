@@ -21,7 +21,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import be.kahosl.KahoslActivity;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
@@ -30,6 +29,7 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	private FTPSHandler ftpHandler;
 	private FileAdapter fileAdapter;
 	private TextView status;
+	private TextView empty;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,14 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 		
 		// Views
         View kDiskView = inflater.inflate(R.layout.kdisk_view, container, false);
-        status = (TextView) kDiskView.findViewById(R.id.status);
         GridView gridView = (GridView) kDiskView.findViewById(R.id.fileList);
+        status = (TextView) kDiskView.findViewById(R.id.status);
+        empty = (TextView) kDiskView.findViewById(R.id.emptyView);
+        
+        // Empty view
+        gridView.setEmptyView(empty);
+        
+        // Adapter
         gridView.setAdapter(fileAdapter);
         
         // Contextmenu
@@ -71,6 +77,7 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	public void onResume() {
 		super.onResume();
 		
+		// TODO: checken of dit werkt
 		if(!ftpHandler.isConnected())
 			ftpHandler.connect();
 	}
@@ -90,18 +97,30 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 		});
 	}
 	
-	protected void updateUIFiles(final FTPFile[] files, final String cwd){
+	protected void updateUIError(final String errorDescription){
 		this.getActivity().runOnUiThread(new Runnable() {
 			public void run() {
-				fileAdapter.updateData(files);
-				if(status != null)
-					status.setText(cwd);
+				Log.wtf("error", errorDescription);
+				if(empty != null)
+					empty.setText(errorDescription);
 			}
 		});
 	}
 	
-	protected void showDialog(String message) {
-		((KahoslActivity) getActivity()).showDialog(message);
+	protected void updateUIFiles(final FTPFile[] files, final String cwd){
+		this.getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				fileAdapter.updateData(files);
+				
+				// Path
+				if(status != null)
+					status.setText(cwd);
+				
+				// Empty dir
+				if(files.length == 0 && ftpHandler.isConnected())
+					empty.setText("Lege map");
+			}
+		});
 	}
 
 	

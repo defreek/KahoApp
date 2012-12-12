@@ -18,8 +18,6 @@ public class FileAdapter extends BaseAdapter {
     private FTPFile[] files;
     private FTPFile selected;
 
-    // TODO: Lege map tonen
-    
     public FileAdapter(Context c) {
         mContext = c;
         files = new FTPFile[0];

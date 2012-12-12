@@ -7,7 +7,6 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -68,13 +67,6 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 		// Activity niet afsluiten
 		moveTaskToBack(true);
 	}
-
-	public void showDialog(String message) {
-	    DialogFragment f = AlertDialogFragment.newInstance(message);
-
-	    f.show(getFragmentManager(), "dialog");
-	}
-
 
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {

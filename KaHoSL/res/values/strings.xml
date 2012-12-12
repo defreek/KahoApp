@@ -15,8 +15,7 @@
     <string name="kdisk_back">Omhoog</string>
     <string name="kdisk_open">Openen</string>
     <string name="kdisk_delete">Verwijderen</string>
-    <string name="kdisk_cut">Knippen</string>
-    <string name="kdisk_paste">Plakken</string>
+    <string name="kdisk_empty_dir">Lege map</string>
     
 	<!-- Instellingen -->
 	<string name="pref_login">E-mailadres</string>

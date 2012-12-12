@@ -96,14 +96,18 @@ public class FTPSHandler extends Handler {
 		ui.updateUIFiles(fileList, getCWD());
 	}
 	
-	private void setStatus(int errorLevel, int status, String statusDescription) {
+	private void setStatus(int status, String statusDescription) {
 		this.status = status;
 		this.statusDescription = statusDescription;
 
 		ui.updateUIStatus(statusDescription);
+	}
+	
+	private void setError(int status, String statusDescription) {
+		this.status = status;
+		this.statusDescription = statusDescription;
 
-		if(errorLevel > Log.WARN)
-			ui.showDialog(statusDescription);
+		ui.updateUIError(statusDescription);
 	}
 
 	protected FTPFile[] getList() {
@@ -126,7 +130,7 @@ public class FTPSHandler extends Handler {
 		disconnect();
 		
 		// Beginnen verbinden
-		setStatus(Log.VERBOSE, -1, "Verbinden");
+		setError(-1, "Verbinden");
 
 		Runnable r = new Runnable() {
 
@@ -164,10 +168,10 @@ public class FTPSHandler extends Handler {
 					}
 
 				} catch (KDiskException e) {
-					setStatus(e.getLevel(), e.getCode(), e.getDescription());
+					setError(e.getCode(), e.getDescription());
 
 				} catch (IOException e) {
-					setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+					setError(1, "Netwerk fout, probeer later opnieuw.");
 				}
 			}
 		};
@@ -176,7 +180,7 @@ public class FTPSHandler extends Handler {
 	}
 	
 	private void disconnect() {
-		setStatus(Log.VERBOSE, -1, "Verbinding verbreken");
+		setStatus(-1, "Verbinding verbreken");
 
 		Runnable r = new Runnable() {
 
@@ -192,7 +196,7 @@ public class FTPSHandler extends Handler {
 					
 					ready();
 				} catch (IOException e) {
-					setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+					setError(1, "Netwerk fout, probeer later opnieuw.");
 				}
 			}
 		};
@@ -214,7 +218,7 @@ public class FTPSHandler extends Handler {
 	}
 
 	protected void changeWorkingDirectory(final String path) {
-		setStatus(Log.VERBOSE, -1, "Map openen");
+		setStatus(-1, "Map openen");
 
 		Runnable r = new Runnable() {
 
@@ -232,7 +236,7 @@ public class FTPSHandler extends Handler {
 					ready();
 
 				} catch (IOException e) {
-					setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+					setError(1, "Netwerk fout, probeer later opnieuw.");
 				}
 			}
 		};
@@ -248,7 +252,7 @@ public class FTPSHandler extends Handler {
 	/* Bestands bewerkingen */
 	// Bestand openen
 	protected void getFile(final FTPFile file) {
-		setStatus(Log.VERBOSE, -1, "Bestand downloaden");
+		setStatus(-1, "Bestand downloaden");
 
 		Runnable r = new Runnable() {
 
@@ -270,9 +274,9 @@ public class FTPSHandler extends Handler {
 					ui.getActivity().startActivity(intent);
 
 				} catch (FileNotFoundException e) {
-					setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+					setError(1, "Netwerk fout, probeer later opnieuw.");
 				} catch (IOException e) {
-					setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+					setError(1, "Netwerk fout, probeer later opnieuw.");
 				}
 			}
 		};
@@ -282,7 +286,7 @@ public class FTPSHandler extends Handler {
 	
 	// Bestand verwijderen
 	protected void deleteFile(final FTPFile file) {
-		setStatus(Log.VERBOSE, -1, "Bestand verwijderen");
+		setStatus(-1, "Bestand verwijderen");
 
 		Runnable r = new Runnable() {
 
@@ -309,7 +313,7 @@ public class FTPSHandler extends Handler {
 			}
 			
 		} catch (IOException e) {
-			setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+			setError(1, "Netwerk fout, probeer later opnieuw.");
 		}
 	}
 	
@@ -318,7 +322,7 @@ public class FTPSHandler extends Handler {
 		try {
 			ftp.rename(from.getName(), to.getName());
 		} catch (IOException e) {
-			setStatus(Log.ERROR, 1, "Netwerk fout, probeer later opnieuw.");
+			setError(1, "Netwerk fout, probeer later opnieuw.");
 		}
 	}
 }
