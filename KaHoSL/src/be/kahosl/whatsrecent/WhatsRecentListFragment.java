@@ -1,6 +1,7 @@
 package be.kahosl.whatsrecent;
 
 import be.kahosl.R;
+import be.kahosl.TabFragment;
 import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
 import be.kahosl.whatsrecent.data.WhatsRecentProvider;
 import be.kahosl.whatsrecent.service.WhatsRecentDownloaderService;
@@ -16,32 +17,36 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 public class WhatsRecentListFragment extends ListFragment implements
-		LoaderManager.LoaderCallbacks<Cursor> {
-	private OnWhatsRecentSelectedListener whatsRecentSelectedListener;
+		TabFragment, LoaderManager.LoaderCallbacks<Cursor> {
 	private static final int WHATSRECENT_LIST_LOADER = 0x01;
 
 	private WhatsRecentCursorAdapter adapter;
-
+	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String projection[] = { WhatsRecentDatabase.COL_URL };
-		Cursor announcementCursor = getActivity().getContentResolver().query(
+		Cursor cursor = getActivity().getContentResolver().query(
 				Uri.withAppendedPath(WhatsRecentProvider.CONTENT_URI,
 						String.valueOf(id)), projection, null, null, null);
-		if (announcementCursor.moveToFirst()) {
-			String announcementUrl = announcementCursor.getString(0);
-			whatsRecentSelectedListener.onWhatsRecentSelected(announcementUrl);
+		if (cursor.moveToFirst()) {
+			String announcementUrl = cursor.getString(cursor.getColumnIndex(WhatsRecentDatabase.COL_URL));
+		
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(announcementUrl));
+			startActivity(browserIntent);
 		}
-		announcementCursor.close();
+		cursor.close();
 	}
 
 	@Override
@@ -55,22 +60,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 		setListAdapter(adapter);
 		setHasOptionsMenu(true);
 	}
-
-	public interface OnWhatsRecentSelectedListener {
-		public void onWhatsRecentSelected(String tutUrl);
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			whatsRecentSelectedListener = (OnWhatsRecentSelectedListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnWhatsRecentSelectedListener");
-		}
-	}
-
+	
 	// options menu
 
 	@Override
@@ -103,6 +93,11 @@ public class WhatsRecentListFragment extends ListFragment implements
 			break;
 		case R.id.delete_menu_item:
 			adapter.hideCheckedItems();
+			//adapter.notifyDataSetChanged();
+			break;
+		case R.id.showall_menu_item:
+			adapter.showAllItems();
+			//adapter.notifyDataSetChanged();
 			break;
 //		case R.id.settings_menu_item:
 //			getActivity().startActivity(item.getIntent());
@@ -118,8 +113,11 @@ public class WhatsRecentListFragment extends ListFragment implements
 				WhatsRecentDatabase.COL_URL, WhatsRecentDatabase.COL_COURSE,
 				WhatsRecentDatabase.COL_AUTHOR, WhatsRecentDatabase.COL_VISIBLE, WhatsRecentDatabase.COL_DATE};
 
+		String selection = WhatsRecentDatabase.COL_VISIBLE + "=?";
+	    String[] selectionArgs = { "1" };
+		
 		CursorLoader cursorLoader = new CursorLoader(getActivity(),
-				WhatsRecentProvider.CONTENT_URI, projection, null, null, null);
+				WhatsRecentProvider.CONTENT_URI, projection, selection, selectionArgs, null);
 		return cursorLoader;
 	}
 
@@ -129,5 +127,9 @@ public class WhatsRecentListFragment extends ListFragment implements
 
 	public void onLoaderReset(Loader<Cursor> loader) {
 		adapter.swapCursor(null);
+	}
+
+	public int getIcon() {
+		return R.drawable.ic_menu_whats_recent;
 	}
 }

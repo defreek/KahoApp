@@ -45,6 +45,7 @@ public final class R {
         public static final int searchList=0x7f080004;
         public static final int searchbox=0x7f080003;
         public static final int settings_option_item=0x7f080014;
+        public static final int showall_menu_item=0x7f080017;
         public static final int status=0x7f080007;
         public static final int title=0x7f08000d;
         public static final int whatsrecent_fragment=0x7f080010;
@@ -90,6 +91,7 @@ public final class R {
         public static final int pref_title_background_update_flag=0x7f050011;
         public static final int refresh=0x7f050013;
         public static final int settings=0x7f050015;
+        public static final int showall=0x7f050016;
         /**  Main 
          */
         public static final int title_activity_kahosl=0x7f050000;

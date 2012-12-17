@@ -15,11 +15,9 @@ import android.widget.RelativeLayout;
 import be.kahosl.addressbook.AddressBookFragment;
 import be.kahosl.agenda.AgendaFragment;
 import be.kahosl.kdisk.KDiskFragment;
-import be.kahosl.whatsrecent.WhatsRecentFragment;
 import be.kahosl.whatsrecent.WhatsRecentListFragment;
 
-public class KahoslActivity extends Activity implements TabListener,
-WhatsRecentListFragment.OnWhatsRecentSelectedListener {
+public class KahoslActivity extends Activity implements TabListener {
 
 	private RelativeLayout r;
 	private LinkedHashMap<String, TabFragment> fragments;
@@ -35,7 +33,7 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
         // Modules aanmaken
         fragments = new LinkedHashMap<String, TabFragment>(5);
         
-        fragments.put("What's Recent?", new WhatsRecentFragment());
+        fragments.put("What's Recent?", new WhatsRecentListFragment());
         fragments.put("Agenda", new AgendaFragment());
         fragments.put("Adresboek", new AddressBookFragment());
         fragments.put("K-schijf", new KDiskFragment());
@@ -92,9 +90,5 @@ WhatsRecentListFragment.OnWhatsRecentSelectedListener {
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// Not implemented
-	}
-
-	public void onWhatsRecentSelected(String url) {
-		Log.wtf("whatsrecent", "List item clicked");
 	}
 }
