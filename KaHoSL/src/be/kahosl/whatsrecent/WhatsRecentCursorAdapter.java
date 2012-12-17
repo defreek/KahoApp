@@ -4,10 +4,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,18 +50,14 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
             TextView author_view = (TextView)view.findViewById(R.id.author);
             author_view.setText(cursor.getString(cursor.getColumnIndex(WhatsRecentDatabase.COL_AUTHOR)));
             
+            
+            DateTimeFormatter parser =  DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            DateTimeFormatter output =  DateTimeFormat.forPattern("dd-MM-yyyy 'om' HH:mm:ss");
+            DateTime dt = parser.parseDateTime(cursor.getString(cursor.getColumnIndex(WhatsRecentDatabase.COL_DATE)));
             TextView date_view = (TextView)view.findViewById(R.id.date);
-            date_view.setText(cursor.getString(cursor.getColumnIndex(WhatsRecentDatabase.COL_DATE)));
-            
-            final int id = cursor.getInt(cursor.getColumnIndex(WhatsRecentDatabase.ID));
-            
-//            DateTimeFormatter parser = ISODateTimeFormat.dateTime();
-//            DateTime dt = parser.parseDateTime(cursor.getString(cursor.getColumnIndex(WhatsRecentDatabase.COL_DATE)));
-//
-//            DateTimeFormatter formatter = DateTimeFormat.mediumDateTime();
-//            Log.e("date", formatter.print(dt));
-            
+            date_view.setText(output.print(dt));
 
+            final int id = cursor.getInt(cursor.getColumnIndex(WhatsRecentDatabase.ID));
             final CheckBox cBox = (CheckBox) view.findViewById(R.id.checkBox);
             // CheckBox
             cBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
