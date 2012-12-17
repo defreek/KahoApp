@@ -1,6 +1,9 @@
 package be.kahosl.agenda;
 
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,10 +14,10 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 
 public class Agenda {
-	private static final int PROJECTION_ID_INDEX = 0;
-	private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-	private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-	private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+	private static final int PROJECTION_EVENT_TITLE_INDEX 			= 0;
+	private static final int PROJECTION_EVENT_DESCRIPTION_INDEX 	= 1;
+	private static final int PROJECTION_EVENT_DSTART_INDEX 			= 2;
+	private static final int PROJECTION_EVENT_EVENT_LOCATION_INDEX 	= 3;
 	
 	public static void insertEvent(Activity ac, String title, String location, String description, Calendar startDate, Calendar endDate, boolean fullDay) {
 		Intent intent = new Intent(Intent.ACTION_INSERT);
@@ -40,35 +43,51 @@ public class Agenda {
 		ac.startActivity(intent);
 	}
 	
-	public static void readEvents(Activity ac) {
+	public static List<AgendaEvent> readEvents(Activity ac) {
 		Context c = ac.getApplicationContext();
-		Uri uri = CalendarContract.Calendars.CONTENT_URI;
-		String[] projection = new String[] {
-		       CalendarContract.Calendars._ID,
-		       CalendarContract.Calendars.ACCOUNT_NAME,
-		       CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-		       CalendarContract.Calendars.NAME,
-		       CalendarContract.Calendars.CALENDAR_COLOR
+		Uri uri = CalendarContract.Events.CONTENT_URI;
+		
+		String[] eventProjection = new String[] {
+				CalendarContract.Events.TITLE,
+				CalendarContract.Events.DESCRIPTION,
+				CalendarContract.Events.DTSTART,
+				CalendarContract.Events.EVENT_LOCATION
 		};
+      
+		Cursor calendarCursor = c.getContentResolver().query(uri, eventProjection, null, null, null);
+		List<AgendaEvent> eventList = new ArrayList<AgendaEvent>();
 		
-		String selection = "((" + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?))";
-		String[] selectionArgs = new String[] {"com.google"}; 
-
-		Cursor calendarCursor = c.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-		
-	    if (calendarCursor.moveToFirst()) {
-	    	long calID = 0;
-	        String displayName = null;
-	        String accountName = null;
-	        String ownerName = null;
-	          
+	    while (calendarCursor.moveToNext()) {
+	        String	eventTitle = null;
+	        String 	eventDescription = null;
+	        String 	eventLocation = null;
+	        long 	eventDate = 0;
+	        
 	        // Get the field values
-	        calID = calendarCursor.getLong(PROJECTION_ID_INDEX);
-	        displayName = calendarCursor.getString(PROJECTION_DISPLAY_NAME_INDEX);
-	        accountName = calendarCursor.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-	        ownerName = calendarCursor.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
+	        eventDescription = 	calendarCursor.getString(PROJECTION_EVENT_DESCRIPTION_INDEX);
+	        eventDate = 		Long.parseLong(calendarCursor.getString(PROJECTION_EVENT_DSTART_INDEX));
+	        eventTitle = 		calendarCursor.getString(PROJECTION_EVENT_TITLE_INDEX);
+	        eventLocation = 	calendarCursor.getString(PROJECTION_EVENT_EVENT_LOCATION_INDEX);
+	        
+	        if (isSameMonth(eventDate)) {
+	        	eventList.add(new AgendaEvent(eventTitle, eventDescription, eventLocation, eventDate));
+	        	System.out.println(eventTitle + ": " + eventDescription + " ON " + eventDate + " IN " + eventLocation);
+	        }
 	    }
 	    
 	    calendarCursor.close();
+	    return eventList;
+	}
+	
+	private static boolean isSameMonth(long dateCompare) {
+		Calendar calNow = Calendar.getInstance();
+		Calendar calCmp = Calendar.getInstance();
+		calCmp.setTimeInMillis(dateCompare);
+
+		if (calCmp.get(Calendar.MONTH) < calNow.get(Calendar.MONTH)) {
+			return false;
+		}
+		
+		return true;
 	}
 }

@@ -1,5 +1,6 @@
 package be.kahosl.agenda;
 
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,7 @@ public class AgendaFragment extends Fragment implements TabFragment {
 		Log.wtf("Start module", "Agenda");
 		
 		cv = (CalendarView)container.findViewById(R.id.calCalendar);
-		Agenda.insertEvent(this.getActivity(), "Title", "Ghent", "Small Test", null, null, true);
+		Agenda.readEvents(this.getActivity());
 		return inflater.inflate(R.layout.agenda_view, container, false);
 	
 		
