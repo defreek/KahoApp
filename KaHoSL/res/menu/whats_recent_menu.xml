@@ -5,16 +5,22 @@
         android:id="@+id/refresh_menu_item"
         android:icon="@drawable/ic_menu_refresh"
         android:title="@string/refresh"
-        android:showAsAction="ifRoom|withText"></item>
+        android:showAsAction="always"></item>
     <item
         android:id="@+id/delete_menu_item"
         android:icon="@drawable/ic_menu_delete"
         android:title="@string/delete"
-        android:showAsAction="ifRoom|withText"></item>
+        android:showAsAction="always"></item>
     
     <item
         android:id="@+id/showall_menu_item"
-        android:icon="@drawable/ic_menu_settings"
+        android:icon="@drawable/ic_menu_revert"
         android:title="@string/showall"
-        android:showAsAction="ifRoom|withText"></item>
+        android:showAsAction="always"></item>
+    
+    <item
+        android:id="@+id/insertevent_menu_item"
+        android:icon="@drawable/ic_menu_my_calendar"
+        android:title="@string/addtocalendar"
+        android:showAsAction="always"></item>
 </menu>

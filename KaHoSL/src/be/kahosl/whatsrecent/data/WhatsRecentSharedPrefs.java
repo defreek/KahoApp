@@ -11,7 +11,7 @@ public class WhatsRecentSharedPrefs {
     public static boolean getBackgroundUpdateFlag(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         return prefs.getBoolean(
-                context.getString(R.string.pref_key_flag_background_update),
+                context.getString(R.string.background_update_key),
                 false);
     }
 
@@ -19,7 +19,7 @@ public class WhatsRecentSharedPrefs {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         Editor prefsEditor = prefs.edit();
         prefsEditor.putBoolean(
-                context.getString(R.string.pref_key_flag_background_update),
+                context.getString(R.string.background_update_key),
                 newValue);
         prefsEditor.commit();
     }

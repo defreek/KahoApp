@@ -25,19 +25,18 @@
     <string name="pref_pass">Wachtwoord</string>
     <string name="pref_pass_desc">Het wachtwoord dat u gebruikt om aan te melden op KaHoSL.</string>
 
+	<string name="pref_update_flag">Mededelingen worden elke 5 minuten ververst.</string>
+	<string name="background_update_key">background_update_key</string>
+    <string name="pref_update_flag_title">Periodieke updates</string>
+    <string name="pref_whatsrecent_url">Toledo link</string>
+    <string name="pref_whatsrecent_url_desc">De url die je op Toledo kan terugvinden.</string>
+    <string name="pref_whatsrecent_url_default"></string>
     
-    
-    
-    
-    <string
-        name="pref_key_flag_background_update">background_update_flag</string>
-    <string
-        name="pref_title_background_update_flag">Allow Updates</string>
-    <string
-        name="pref_summary_background_update_flag">Download announcements list daily</string>
+    <!-- Whats recent -->
     <string name="refresh">Vernieuwen</string>
     <string name="delete">Verbergen</string>
     <string name="settings">Settings</string>
     <string name="showall">Toon alles</string>
-
+	<string name="addtocalendar">Toevoegen aan kalender</string>
+	
 </resources>

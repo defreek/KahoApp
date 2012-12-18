@@ -18,12 +18,16 @@
         
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="Background Updating">
-        
+    <PreferenceCategory android:title="Whats recent">
+        <EditTextPreference 
+            android:title="@string/pref_whatsrecent_url"
+        	android:key="pref_whatsrecenturl"
+        	android:summary="@string/pref_whatsrecent_url_desc"
+        	android:defaultValue="@string/pref_whatsrecent_url_default"	/>
         <CheckBoxPreference
-            android:summary="@string/pref_summary_background_update_flag"
-            android:title="@string/pref_title_background_update_flag"
-            android:key="@string/pref_key_flag_background_update" />
+            android:summary="@string/pref_update_flag"
+            android:title="@string/pref_update_flag_title"
+            android:key="background_update_key" />
     </PreferenceCategory>
     
 </PreferenceScreen>

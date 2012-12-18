@@ -1,44 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <!-- view voor What's Recent -->
-    
-	<fragment
+
+    <fragment
         android:id="@+id/whatsrecent_fragment"
         android:name="be.kahosl.whatsrecent.WhatsRecentListFragment"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="45" >
+        android:layout_height="0dp" >
     </fragment>
-<!-- <RelativeLayout
-        android:layout_marginTop="-45dip" 
-        android:padding="0dip"
-        android:layout_alignParentBottom="true"
-        android:gravity="bottom|right" 
-        android:background="@android:drawable/bottom_bar"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent">
-        <Button
-            android:id="@+id/manual_setup"
-            android:text="action"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="-4dip" 
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="false" 
-            />
-        <Button
-            android:id="@+id/next"
-            android:text="test"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="-4dip" 
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="false" 
-            />
-    </RelativeLayout>
-     -->
-</LinearLayout>
+
+</RelativeLayout>

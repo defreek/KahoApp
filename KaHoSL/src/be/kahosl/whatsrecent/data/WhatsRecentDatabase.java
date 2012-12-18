@@ -17,6 +17,7 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
     public static final String COL_URL = "url";
     public static final String COL_COURSE = "course";
     public static final String COL_AUTHOR = "author";
+    public static final String COL_TYPE = "type";
     public static final String COL_DATE = "date";
     public static final String COL_VISIBLE = "visible";
 
@@ -27,6 +28,7 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
             + COL_URL + " text NOT NULL, "
             + COL_COURSE + " text NOT NULL, "
             + COL_AUTHOR + " text NOT NULL, "
+            + COL_TYPE + " text, "
             + COL_VISIBLE + " integer default 1, "
             + COL_DATE + " datetime NOT NULL);";
 

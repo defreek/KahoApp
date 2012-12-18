@@ -93,15 +93,13 @@ public class WhatsRecentListFragment extends ListFragment implements
 			break;
 		case R.id.delete_menu_item:
 			adapter.hideCheckedItems();
-			//adapter.notifyDataSetChanged();
 			break;
 		case R.id.showall_menu_item:
 			adapter.showAllItems();
-			//adapter.notifyDataSetChanged();
 			break;
-//		case R.id.settings_menu_item:
-//			getActivity().startActivity(item.getIntent());
-//			break;
+		case R.id.insertevent_menu_item:
+			
+			break;
 		}
 		return true;
 	}
@@ -111,7 +109,8 @@ public class WhatsRecentListFragment extends ListFragment implements
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		String[] projection = { WhatsRecentDatabase.ID, WhatsRecentDatabase.COL_TITLE,
 				WhatsRecentDatabase.COL_URL, WhatsRecentDatabase.COL_COURSE,
-				WhatsRecentDatabase.COL_AUTHOR, WhatsRecentDatabase.COL_VISIBLE, WhatsRecentDatabase.COL_DATE};
+				WhatsRecentDatabase.COL_AUTHOR, WhatsRecentDatabase.COL_VISIBLE,
+				WhatsRecentDatabase.COL_DATE, WhatsRecentDatabase.COL_TYPE};
 
 		String selection = WhatsRecentDatabase.COL_VISIBLE + "=?";
 	    String[] selectionArgs = { "1" };

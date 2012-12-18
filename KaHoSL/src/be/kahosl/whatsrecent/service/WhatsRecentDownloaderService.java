@@ -138,6 +138,9 @@ public class WhatsRecentDownloaderService extends Service {
                                 WhatsRecentDatabase.COL_DATE,
                                 feedEntry.published);
 		                whatsrecentData.put(
+                                WhatsRecentDatabase.COL_TYPE,
+                                feedEntry.type);
+		                whatsrecentData.put(
                                 WhatsRecentDatabase.COL_VISIBLE,
                                 1);
 		                getContentResolver().insert(
@@ -248,7 +251,7 @@ class FeedEntry {
 		parser.next();
 		
 		// type
-		type = parser.getText().replaceAll("[ :]", "");
+		type = parser.getText().replaceAll("[ :]", "").replaceAll("\n", "");
 		
 		parser.nextTag();
 		parser.nextTag();
