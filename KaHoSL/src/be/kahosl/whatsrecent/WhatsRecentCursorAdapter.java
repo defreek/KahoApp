@@ -3,6 +3,7 @@ package be.kahosl.whatsrecent;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +40,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 	private Context context;
 	LayoutInflater mInflater;
 
-	private HashMap<Integer, Boolean> checkedItems = new HashMap<Integer, Boolean>();
+	private final HashMap<Integer, Boolean> checkedItems = new HashMap<Integer, Boolean>();
 
 	public WhatsRecentCursorAdapter(Context context, Cursor c) {
 		// that constructor should be used with loaders.
@@ -96,9 +97,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View v = mInflater.inflate(R.layout.list_item, parent, false);
-		// edit: no need to call bindView here. That's done automatically
-		return v;
+		return mInflater.inflate(R.layout.list_item, parent, false);
 	}
 
 	@Override
@@ -133,11 +132,10 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 			}
 			it.remove(); // avoids a ConcurrentModificationException
 		}
-
+ 
 		if (aantal > 0)
 			Toast.makeText(context, aantal + " verborgen", Toast.LENGTH_SHORT)
 					.show();
-		
 	}
 
 	public void showAllItems() {
@@ -166,11 +164,16 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 		Matcher m = p.matcher(string);
 
 		if (m.find()) {
-			Log.e("GROUP1", m.group());
 			String[] dt = m.group().split("/");
 			
 			Calendar c = Calendar.getInstance();
-			c.set(dt.length < 3 ? c.get(Calendar.YEAR) : Integer.parseInt(dt[2]), Integer.parseInt(dt[1]), Integer.parseInt(dt[0]));
+			
+			int dag = Integer.parseInt(dt[0]);
+			int maand = Integer.parseInt(dt[1]) - 1;
+			int jaar = dt.length < 3 ? c.get(Calendar.YEAR) : Integer.parseInt(dt[2]);
+			
+			c.set(jaar, maand, dag);
+
 			return c;
 		} else {
 			return null;

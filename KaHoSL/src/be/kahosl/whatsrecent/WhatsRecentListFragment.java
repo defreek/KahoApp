@@ -1,42 +1,25 @@
 package be.kahosl.whatsrecent;
 
-import java.util.Calendar;
-
-import be.kahosl.R;
-import be.kahosl.TabFragment;
-import be.kahosl.agenda.Agenda;
-import be.kahosl.whatsrecent.FilterDialog.OnCloseListDialogListener;
-import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
-import be.kahosl.whatsrecent.data.WhatsRecentProvider;
-import be.kahosl.whatsrecent.service.WhatsRecentDownloaderService;
-
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
+import be.kahosl.R;
+import be.kahosl.TabFragment;
+import be.kahosl.whatsrecent.FilterDialog.OnCloseListDialogListener;
+import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
+import be.kahosl.whatsrecent.data.WhatsRecentProvider;
+import be.kahosl.whatsrecent.service.WhatsRecentDownloaderService;
 
 public class WhatsRecentListFragment extends ListFragment implements
 		TabFragment, LoaderManager.LoaderCallbacks<Cursor>, OnCloseListDialogListener {
@@ -47,6 +30,22 @@ public class WhatsRecentListFragment extends ListFragment implements
 	
 	private String filter = "%";
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		getLoaderManager().initLoader(WHATSRECENT_LIST_LOADER, null, this);
+
+		adapter = new WhatsRecentCursorAdapter(getActivity()
+				.getApplicationContext(), null);
+
+		setListAdapter(adapter);
+		setHasOptionsMenu(true);
+		
+		filterDialog = FilterDialog.newInstance(this);
+
+	}
+	
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		String projection[] = { WhatsRecentDatabase.COL_URL };
@@ -62,21 +61,6 @@ public class WhatsRecentListFragment extends ListFragment implements
 			startActivity(browserIntent);
 		}
 		cursor.close();
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		getLoaderManager().initLoader(WHATSRECENT_LIST_LOADER, null, this);
-
-		adapter = new WhatsRecentCursorAdapter(getActivity()
-				.getApplicationContext(), null);
-
-		setListAdapter(adapter);
-		setHasOptionsMenu(true);
-		
-		filterDialog = FilterDialog.newInstance(this);
 	}
 
 	// options menu
@@ -164,14 +148,13 @@ public class WhatsRecentListFragment extends ListFragment implements
 	public void onDialogListSelection() {
 		String fltr = filterDialog.getSelectedType();
 		
-		if (fltr.equals("Geen"))
-				filter = "%";
-		else if (fltr.equals("Taak"))
+		if (fltr.equals("Taak"))
 			filter = "assignment";
 		else if (fltr.equals("Inhoud"))
 			filter = "content";
 		else if (fltr.equals("Mededeling"))
 			filter = "announcement";
+		else filter = "%";
 		
 		getLoaderManager().restartLoader(WHATSRECENT_LIST_LOADER, null, this);
 	}
