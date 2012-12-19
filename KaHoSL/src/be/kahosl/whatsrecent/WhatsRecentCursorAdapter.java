@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -153,9 +155,25 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 			if ((Boolean) pairs.getValue()) {
 				String title = getTitle((Integer)pairs.getKey());
-				Agenda.insertEvent(activity, title, "", "", null, null, false);
+				Agenda.insertEvent(activity, title, "", "", getDateFromString(title), null, false);
 			}
 			it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
+	
+	private Calendar getDateFromString(String string) {
+		Pattern p = Pattern.compile("[0-9]+/[0-9]+|/[0-9]+");
+		Matcher m = p.matcher(string);
+
+		if (m.find()) {
+			Log.e("GROUP1", m.group());
+			String[] dt = m.group().split("/");
+			
+			Calendar c = Calendar.getInstance();
+			c.set(dt.length < 3 ? c.get(Calendar.YEAR) : Integer.parseInt(dt[2]), Integer.parseInt(dt[1]), Integer.parseInt(dt[0]));
+			return c;
+		} else {
+			return null;
 		}
 	}
 	
