@@ -1,7 +1,10 @@
 package be.kahosl.whatsrecent;
 
+import java.util.Calendar;
+
 import be.kahosl.R;
 import be.kahosl.TabFragment;
+import be.kahosl.agenda.Agenda;
 import be.kahosl.whatsrecent.FilterDialog.OnCloseListDialogListener;
 import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
 import be.kahosl.whatsrecent.data.WhatsRecentProvider;
@@ -73,7 +76,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 		setListAdapter(adapter);
 		setHasOptionsMenu(true);
 		
-		filterDialog = FilterDialog.newInstance(getId());
+		filterDialog = FilterDialog.newInstance(this);
 	}
 
 	// options menu
@@ -114,7 +117,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 			adapter.showAllItems();
 			break;
 		case R.id.insertevent_menu_item:
-
+			adapter.addCheckedToCalendar(getActivity());
 			break;
 		case R.id.filter_menu_item:
 			showFilterDialog();

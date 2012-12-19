@@ -1,5 +1,6 @@
 package be.kahosl.whatsrecent;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -11,10 +12,12 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.kahosl.R;
+import be.kahosl.agenda.Agenda;
 import be.kahosl.whatsrecent.data.WhatsRecentDatabase;
 import be.kahosl.whatsrecent.data.WhatsRecentProvider;
 
@@ -141,6 +145,31 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 		context.getContentResolver().update(WhatsRecentProvider.CONTENT_URI,
 				editedValues, null, null);
 	}
+	
+	public void addCheckedToCalendar(Activity activity) {
+		Iterator it = checkedItems.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry pairs = (Entry) it.next();
+
+			if ((Boolean) pairs.getValue()) {
+				String title = getTitle((Integer)pairs.getKey());
+				Agenda.insertEvent(activity, title, "", "", null, null, false);
+			}
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
+	
+	private String getTitle(int id) {
+		Cursor c = this.getCursor();
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			if (c.getInt(c.getColumnIndex(WhatsRecentDatabase.ID)) == id) {
+				return c.getString(c.getColumnIndex(WhatsRecentDatabase.COL_TITLE));
+			}
+			c.moveToNext();
+		}
+		return "";
+	}
 
 	private String formatDatum(DateTime dt) {
 		DateTime now = new DateTime();
@@ -154,11 +183,11 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 					.toFormatter();
 		} else if (period.getWeeks() != 0) {
 			formatter = new PeriodFormatterBuilder().appendWeeks()
-					.appendSuffix(" weken geleden").printZeroNever()
+					.appendSuffix(period.getWeeks() > 1 ? " weken geleden" : " week geleden").printZeroNever()
 					.toFormatter();
 		} else if (period.getDays() != 0) {
 			formatter = new PeriodFormatterBuilder().appendDays()
-					.appendSuffix(" dagen geleden").printZeroNever()
+					.appendSuffix(period.getDays() > 1 ? " dagen geleden" : " dag geleden").printZeroNever()
 					.toFormatter();
 		} else if (period.getHours() != 0) {
 			formatter = new PeriodFormatterBuilder().appendHours()
@@ -166,7 +195,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 					.toFormatter();
 		} else if (period.getMinutes() != 0) {
 			formatter = new PeriodFormatterBuilder().appendMinutes()
-					.appendSuffix(" minuten geleden").printZeroNever()
+					.appendSuffix(period.getMinutes() > 1 ? " minuten geleden" : " minuut geleden").printZeroNever()
 					.toFormatter();
 		} else {
 			formatter = new PeriodFormatterBuilder().appendSeconds()
@@ -177,3 +206,4 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 		return formatter.print(period);
 	}
 }
+

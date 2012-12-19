@@ -13,4 +13,5 @@
         android:tag="whatsrecent" >
     </fragment>
 
+
 </RelativeLayout>

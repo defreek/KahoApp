@@ -11,17 +11,17 @@ public class FilterDialog extends DialogFragment implements DialogInterface.OnCl
 
     private String[] type = { "Geen", "Mededeling", "Inhoud", "Taak" };
     private int selected = 0;
-    private final int ID;
+    private WhatsRecentListFragment fragment;
 
-    public static FilterDialog newInstance(int id) {
-    	FilterDialog dialog = new FilterDialog(id);
+    public static FilterDialog newInstance(WhatsRecentListFragment fragment) {
+    	FilterDialog dialog = new FilterDialog(fragment);
         Bundle bundle = new Bundle();
         dialog.setArguments(bundle);
         return dialog;
     }
 
-    private FilterDialog(int id) {
-    	this.ID = id;
+    private FilterDialog(WhatsRecentListFragment fragment) {
+    	this.fragment = fragment;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FilterDialog extends DialogFragment implements DialogInterface.OnCl
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Filter");
-        builder.setNegativeButton("Cancel", this);
+        builder.setNegativeButton("Annuleren", this);
         builder.setSingleChoiceItems(type, selected, new SingleChoiceListener());
         return builder.create();
     }
@@ -48,7 +48,7 @@ public class FilterDialog extends DialogFragment implements DialogInterface.OnCl
         public void onClick(DialogInterface dialog, int item) {
         	selected = item;
         	
-        	OnCloseListDialogListener act = (OnCloseListDialogListener) getFragmentManager().findFragmentById(ID);
+        	OnCloseListDialogListener act = (OnCloseListDialogListener) fragment;
             act.onDialogListSelection();
             dismiss();
         }
