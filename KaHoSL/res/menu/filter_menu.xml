@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <group android:checkableBehavior="single">
+      <item android:id="@+id/filter_none"
+          android:title="Geen"
+          android:checked="true"/>
+      <item android:id="@+id/filter_announcement"
+          android:title="Mededeling"/>
+      <item android:id="@+id/filter_content"
+          android:title="Inhoud"/>
+      <item android:id="@+id/filter_assignement"
+          android:title="Taak"/>
+  </group>
+</menu>

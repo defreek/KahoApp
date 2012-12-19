@@ -9,7 +9,8 @@
         android:id="@+id/whatsrecent_fragment"
         android:name="be.kahosl.whatsrecent.WhatsRecentListFragment"
         android:layout_width="wrap_content"
-        android:layout_height="0dp" >
+        android:layout_height="0dp"
+        android:tag="whatsrecent" >
     </fragment>
 
 </RelativeLayout>

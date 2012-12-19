@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
@@ -16,7 +15,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,13 +82,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				if (isChecked) {
-					checkedItems.put(id, true);
-					// do some operations here
-				} else if (!isChecked) {
-					checkedItems.put(id, false);
-					// do some operations here
-				}
+				checkedItems.put(id, isChecked ? true : false);
 			}
 		});
 		cBox.setChecked(checkedItems.get(id));
@@ -139,6 +131,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 		if (aantal > 0)
 			Toast.makeText(context, aantal + " verborgen", Toast.LENGTH_SHORT)
 					.show();
+		
 	}
 
 	public void showAllItems() {

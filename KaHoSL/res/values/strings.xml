@@ -37,6 +37,7 @@
     <string name="delete">Verbergen</string>
     <string name="settings">Settings</string>
     <string name="showall">Toon alles</string>
+    <string name="filter">Filter</string>
 	<string name="addtocalendar">Toevoegen aan kalender</string>
 	
 </resources>

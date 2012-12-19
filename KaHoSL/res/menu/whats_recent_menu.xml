@@ -23,4 +23,10 @@
         android:icon="@drawable/ic_menu_my_calendar"
         android:title="@string/addtocalendar"
         android:showAsAction="always"></item>
+    
+    <item
+        android:id="@+id/filter_menu_item"
+        android:icon="@drawable/ic_menu_filter"
+        android:title="@string/filter"
+        android:showAsAction="always"></item>
 </menu>
