@@ -1,11 +1,15 @@
 package be.kahosl.kdisk;
 
+import java.io.Serializable;
+
 import org.apache.commons.net.ftp.FTPFile;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -24,7 +28,9 @@ import android.widget.TextView;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
-public class KDiskFragment extends Fragment implements TabFragment, OnItemClickListener, OnItemLongClickListener, OnClickListener, OnSharedPreferenceChangeListener {
+public class KDiskFragment extends Fragment implements TabFragment, Serializable, Parcelable, OnItemClickListener, OnItemLongClickListener, OnClickListener, OnSharedPreferenceChangeListener {
+	
+	private static final long serialVersionUID = -5968262969219105721L;
 	
 	private FTPSHandler ftpHandler;
 	private FileAdapter fileAdapter;
@@ -89,38 +95,44 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	
 	/* UI functies */
 	protected void updateUIStatus(final String statusDescription){
-		this.getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				if(status != null)
-					status.setText(statusDescription);
-			}
-		});
+		if(getActivity() != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					if(status != null)
+						status.setText(statusDescription);
+				}
+			});
+		}
 	}
 	
 	protected void updateUIError(final String errorDescription){
-		this.getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				Log.wtf("error", errorDescription);
-				if(empty != null)
-					empty.setText(errorDescription);
-			}
-		});
+		if(getActivity() != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					Log.wtf("error", errorDescription);
+					if(empty != null)
+						empty.setText(errorDescription);
+				}
+			});
+		}
 	}
 	
 	protected void updateUIFiles(final FTPFile[] files, final String cwd){
-		this.getActivity().runOnUiThread(new Runnable() {
-			public void run() {
-				fileAdapter.updateData(files);
-				
-				// Path
-				if(status != null)
-					status.setText(cwd);
-				
-				// Empty dir
-				if(files.length == 0 && ftpHandler.isConnected())
-					empty.setText("Lege map");
-			}
-		});
+		if(getActivity() != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					fileAdapter.updateData(files);
+					
+					// Path
+					if(status != null)
+						status.setText(cwd);
+					
+					// Empty dir
+					if(files.length == 0 && ftpHandler.isConnected())
+						empty.setText("Lege map");
+				}
+			});
+		}
 	}
 
 	
@@ -145,8 +157,6 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	
 	// Instellingen veranderd
 	public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-		Log.wtf("update", key);
-		
 		if(key.equals("pref_login") || key.equals("pref_pass")) {
 			ftpHandler.updateLoginCredentials(preferences.getString("pref_login", ""), preferences.getString("pref_pass", ""));
 			ftpHandler.connect();
@@ -204,4 +214,11 @@ public class KDiskFragment extends Fragment implements TabFragment, OnItemClickL
 	}
 	*/
 
+	public int describeContents() {
+		return 0;
+	}
+
+	public void writeToParcel(Parcel dest, int flags) {
+		// Nothing
+	}
 }

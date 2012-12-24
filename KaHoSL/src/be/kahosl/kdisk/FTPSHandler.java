@@ -206,9 +206,13 @@ public class FTPSHandler extends Handler {
 	
 	// Verbinding met internet?
 	private boolean isOnline() {
-	    ConnectivityManager cm = (ConnectivityManager) ui.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    return (netInfo != null && netInfo.isConnectedOrConnecting());
+		if (ui.getActivity() != null) {
+		    ConnectivityManager cm = (ConnectivityManager) ui.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		    return (netInfo != null && netInfo.isConnectedOrConnecting());
+		
+		} else
+			return false;
 	}
 
 	

@@ -102,13 +102,15 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 	@Override
 	public Cursor swapCursor(Cursor newCursor) {
-		newCursor.moveToFirst();
-		while (newCursor.isAfterLast() == false) {
-			int id = newCursor.getInt(newCursor
-					.getColumnIndex(WhatsRecentDatabase.ID));
-			if (!checkedItems.containsKey(id))
-				checkedItems.put(id, false);
-			newCursor.moveToNext();
+		if(newCursor != null) {
+			newCursor.moveToFirst();
+			while (newCursor.isAfterLast() == false) {
+				int id = newCursor.getInt(newCursor
+						.getColumnIndex(WhatsRecentDatabase.ID));
+				if (!checkedItems.containsKey(id))
+					checkedItems.put(id, false);
+				newCursor.moveToNext();
+			}
 		}
 		return super.swapCursor(newCursor);
 	}

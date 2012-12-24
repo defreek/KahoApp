@@ -10,8 +10,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.RelativeLayout;
 import be.kahosl.addressbook.AddressBookFragment;
 import be.kahosl.agenda.AgendaFragment;
 import be.kahosl.kdisk.KDiskFragment;
@@ -19,27 +17,28 @@ import be.kahosl.whatsrecent.WhatsRecentListFragment;
 
 public class KahoslActivity extends Activity implements TabListener {
 
-	private RelativeLayout r;
 	private LinkedHashMap<String, TabFragment> fragments;
-	private Fragment active;
-
-	// TODO: first run -> login credentials
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kahosl);
         
-        // Modules aanmaken
-        fragments = new LinkedHashMap<String, TabFragment>(5);
+        if(savedInstanceState != null) {
+        	// Modules ophalen
+        	fragments = (LinkedHashMap<String, TabFragment>) savedInstanceState.getSerializable("fragments");
         
-        fragments.put("What's Recent?", new WhatsRecentListFragment());
-        fragments.put("Agenda", new AgendaFragment());
-        fragments.put("Adresboek", new AddressBookFragment());
-        fragments.put("K-schijf", new KDiskFragment());
-        fragments.put("Instellingen", new SettingsFragment());
-        
-		r = (RelativeLayout) findViewById(R.id.mainLayout);
+        } else {
+            // Modules aanmaken
+            fragments = new LinkedHashMap<String, TabFragment>(5);
+            
+            fragments.put("What's Recent?", new WhatsRecentListFragment());
+            fragments.put("Agenda", new AgendaFragment());
+            fragments.put("Adresboek", new AddressBookFragment());
+            fragments.put("K-schijf", new KDiskFragment());
+            fragments.put("Instellingen", new SettingsFragment());
+        }
+
 		ActionBar aBar = getActionBar();
 
 		// Tabs aanmaken
@@ -58,8 +57,18 @@ public class KahoslActivity extends Activity implements TabListener {
 		aBar.setDisplayShowHomeEnabled(false);
 		aBar.setDisplayShowTitleEnabled(false);
 		aBar.show();
+		
+        if(savedInstanceState != null)
+        	aBar.setSelectedNavigationItem(savedInstanceState.getInt("selectedTab"));
 	}
     
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putSerializable("fragments", fragments);
+		outState.putInt("selectedTab", getActionBar().getSelectedNavigationIndex());
+		super.onSaveInstanceState(outState);
+	}
+
 	@Override
 	public void onBackPressed() {
 		// Activity niet afsluiten
@@ -69,18 +78,7 @@ public class KahoslActivity extends Activity implements TabListener {
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		FragmentTransaction fTransaction = getFragmentManager().beginTransaction();
-
-		// Huidig fragment verbergen
-		if(active != null)
-			fTransaction.hide(active);
-
-		// Nieuw fragment tonen
-		active = (Fragment) fragments.get(tab.getTag());
-		if(active.isHidden())
-			fTransaction.show(active);
-		else
-			fTransaction.add(r.getId(), active);
-
+		fTransaction.replace(R.id.fragment_container, (Fragment) fragments.get(tab.getTag()));
 		fTransaction.commit();
 	}
 

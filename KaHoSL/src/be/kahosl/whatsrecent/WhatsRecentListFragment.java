@@ -1,5 +1,7 @@
 package be.kahosl.whatsrecent;
 
+import java.io.Serializable;
+
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -9,6 +11,8 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +26,10 @@ import be.kahosl.whatsrecent.data.WhatsRecentProvider;
 import be.kahosl.whatsrecent.service.WhatsRecentDownloaderService;
 
 public class WhatsRecentListFragment extends ListFragment implements
-		TabFragment, LoaderManager.LoaderCallbacks<Cursor>, OnCloseListDialogListener {
+		TabFragment, Serializable, Parcelable, LoaderManager.LoaderCallbacks<Cursor>, OnCloseListDialogListener {
+
+	private static final long serialVersionUID = -1048473633346164964L;
+
 	private static final int WHATSRECENT_LIST_LOADER = 0x01;
 
 	private WhatsRecentCursorAdapter adapter;
@@ -157,6 +164,14 @@ public class WhatsRecentListFragment extends ListFragment implements
 		else filter = "%";
 		
 		getLoaderManager().restartLoader(WHATSRECENT_LIST_LOADER, null, this);
+	}
+
+	public int describeContents() {
+		return 0;
+	}
+
+	public void writeToParcel(Parcel arg0, int arg1) {
+		// Nothing
 	}
 
 }

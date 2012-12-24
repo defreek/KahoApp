@@ -45,6 +45,7 @@ public final class R {
         public static final int filter_content=0x7f080014;
         public static final int filter_menu_item=0x7f08001e;
         public static final int filter_none=0x7f080012;
+        public static final int fragment_container=0x7f080000;
         public static final int horLine=0x7f080008;
         public static final int imageView=0x7f08000b;
         public static final int insertevent_menu_item=0x7f08001d;
@@ -52,7 +53,6 @@ public final class R {
         public static final int kdisk_cm_open=0x7f080016;
         public static final int linearLayout1=0x7f08000c;
         public static final int mail=0x7f080002;
-        public static final int mainLayout=0x7f080000;
         public static final int name=0x7f080001;
         public static final int refresh_menu_item=0x7f08001a;
         public static final int refresh_option_item=0x7f080018;

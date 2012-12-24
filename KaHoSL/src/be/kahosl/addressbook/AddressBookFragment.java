@@ -1,10 +1,14 @@
 package be.kahosl.addressbook;
 
+import java.io.Serializable;
+
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +21,9 @@ import android.widget.SearchView.OnQueryTextListener;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
-public class AddressBookFragment extends Fragment implements TabFragment, OnQueryTextListener, OnItemClickListener {
+public class AddressBookFragment extends Fragment implements TabFragment, Serializable, Parcelable, OnQueryTextListener, OnItemClickListener {
+	
+	private static final long serialVersionUID = -2245246540546614731L;
 	
 	private XMLParser xml;
 	private ContactAdapter contactAdapter;
@@ -95,5 +101,15 @@ public class AddressBookFragment extends Fragment implements TabFragment, OnQuer
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:" + c.getMail()));
         startActivity(intent);
+	}
+
+
+	public int describeContents() {
+		return 0;
+	}
+
+
+	public void writeToParcel(Parcel dest, int flags) {
+		// Nothing
 	}
 }
