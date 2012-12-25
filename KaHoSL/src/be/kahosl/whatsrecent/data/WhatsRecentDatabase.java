@@ -46,8 +46,8 @@ public class WhatsRecentDatabase extends SQLiteOpenHelper {
     @Override
 	public void onOpen(SQLiteDatabase db) {
     	
-//		db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHATSRECENT);
-//		db.execSQL(DB_SCHEMA);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_WHATSRECENT);
+		db.execSQL(DB_SCHEMA);
 		
 		super.onOpen(db);
 	}

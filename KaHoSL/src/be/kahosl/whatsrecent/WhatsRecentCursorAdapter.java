@@ -40,7 +40,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 	private Context context;
 	LayoutInflater mInflater;
 
-	private final HashMap<Integer, Boolean> checkedItems = new HashMap<Integer, Boolean>();
+	private final HashMap<Integer, Boolean> checkedItems;
 
 	public WhatsRecentCursorAdapter(Context context, Cursor c) {
 		// that constructor should be used with loaders.
@@ -48,6 +48,8 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 		this.context = context;
 		mInflater = LayoutInflater.from(context);
+		
+		checkedItems =  new HashMap<Integer, Boolean>();
 	}
 
 	@Override
