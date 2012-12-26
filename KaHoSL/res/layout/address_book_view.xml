@@ -16,5 +16,43 @@
 		android:layout_width="match_parent" 
 		android:layout_height="match_parent"
 		android:padding="10dp" />
+	
+	<LinearLayout 
+	    android:id="@+id/emptyABView"
+		android:layout_width="match_parent" 
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone"
+		android:padding="10dp" >
+	    
+		<TextView
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+	        android:textSize="24sp"
+	        android:lines="1"
+			android:text="Technologiecampus Gent" />
+		
+		<TextView
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:paddingLeft="15dp"
+			android:text="Gebroeders De Smetstraat 1\n9000 Gent" />
+				
+		<TextView
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:paddingLeft="15dp"
+			android:text="Tel. 09 265 86 10" />
+		
+		<TextView
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+	        android:textSize="18sp"
+	        android:paddingLeft="15dp"
+			android:text="info.gent@kahosl.be" />
+		
+	</LinearLayout>
 
 </LinearLayout>

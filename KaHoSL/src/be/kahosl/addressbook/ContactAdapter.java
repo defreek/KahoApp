@@ -1,6 +1,7 @@
 package be.kahosl.addressbook;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class ContactAdapter extends BaseAdapter {
     
     @Override
 	public boolean isEmpty() {
+    	Log.wtf("empty", "" + (contacts.length == 0));
 		return contacts.length == 0;
 	}
     
@@ -34,6 +36,10 @@ public class ContactAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		// Not implemented
 		return 0;
+	}
+	
+	public void clear() {
+		updateData(new Contact[0]);
 	}
 	
 	public void updateData(Contact[] contacts) {

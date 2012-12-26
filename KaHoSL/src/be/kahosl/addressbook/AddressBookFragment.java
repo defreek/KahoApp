@@ -49,6 +49,8 @@ public class AddressBookFragment extends Fragment implements TabFragment, Serial
         ListView searchList = (ListView) abView.findViewById(R.id.searchList);
         SearchView searchBox = (SearchView) abView.findViewById(R.id.searchbox);
         
+        searchList.setEmptyView(abView.findViewById(R.id.emptyABView));
+        
         // Adapter
         searchList.setAdapter(contactAdapter);
         
@@ -75,6 +77,8 @@ public class AddressBookFragment extends Fragment implements TabFragment, Serial
 	public boolean onQueryTextChange(String q) {
 		if(q.length() > 2)
 			xml.searchContacts(q);
+		else
+			contactAdapter.clear();
 		
 		return false;
 	}
