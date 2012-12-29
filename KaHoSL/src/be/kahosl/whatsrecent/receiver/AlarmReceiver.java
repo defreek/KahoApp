@@ -14,7 +14,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(DEBUG_TAG, "Recurring alarm; requesting download service.");
+        Log.e(DEBUG_TAG, "Recurring alarm; requesting download service.");
         // start the download
         Intent downloader = new Intent(context, WhatsRecentDownloaderService.class);
         downloader.setData(Uri
