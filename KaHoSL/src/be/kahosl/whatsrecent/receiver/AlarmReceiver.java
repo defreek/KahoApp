@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import be.kahosl.whatsrecent.WhatsRecentListFragment;
 import be.kahosl.whatsrecent.service.WhatsRecentDownloaderService;
 
 
@@ -18,7 +19,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // start the download
         Intent downloader = new Intent(context, WhatsRecentDownloaderService.class);
         downloader.setData(Uri
-                .parse("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom"));
+                .parse(WhatsRecentListFragment.WHATSRECENT_URL));
         context.startService(downloader);
     }
 

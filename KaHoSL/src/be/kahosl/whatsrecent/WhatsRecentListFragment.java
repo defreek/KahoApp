@@ -22,6 +22,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +49,8 @@ public class WhatsRecentListFragment extends ListFragment implements
 	private FilterDialog filterDialog;
 
 	private String filter = "%";
+	
+	public static String WHATSRECENT_URL;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,27 @@ public class WhatsRecentListFragment extends ListFragment implements
 		} else {
 			cancelRecurringAlarm(context);
 		}
+		
+		WHATSRECENT_URL = preferences.getString("pref_whatsrecenturl", "https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom");
+		
+		// Telkens wanneer view wordt geopend update uitvoeren, is dit nodig?
+		getNewItems();
+	}
+	
+	private void getNewItems() {
+		Intent refreshIntent = new Intent(
+				getActivity().getApplicationContext(),
+				WhatsRecentDownloaderService.class);
+		refreshIntent
+				.setData(Uri
+						.parse(WHATSRECENT_URL));
+		getActivity().startService(refreshIntent);
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		this.setEmptyText("Laden...");
+		super.onViewCreated(view, savedInstanceState);
 	}
 
 	private void cancelRecurringAlarm(Context context) {
@@ -93,7 +117,8 @@ public class WhatsRecentListFragment extends ListFragment implements
 				0, downloader, PendingIntent.FLAG_CANCEL_CURRENT);
 		AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
 				Context.ALARM_SERVICE);
-		alarms.setRepeating(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis(), 1*60*1000, recurringDownload);
+		alarms.setRepeating(AlarmManager.RTC_WAKEUP,
+				updateTime.getTimeInMillis(), 1 * 60 * 1000, recurringDownload);
 	}
 
 	@Override
@@ -125,7 +150,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 				WhatsRecentDownloaderService.class);
 		refreshIntent
 				.setData(Uri
-						.parse("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom"));
+						.parse(WHATSRECENT_URL));
 		MenuItem refresh = menu.findItem(R.id.refresh_menu_item);
 		refresh.setIntent(refreshIntent);
 	}
@@ -219,6 +244,9 @@ public class WhatsRecentListFragment extends ListFragment implements
 			} else {
 				cancelRecurringAlarm(getActivity().getApplicationContext());
 			}
+		} else if (key.equals("pref_whatsrecenturl")) {
+			WHATSRECENT_URL = sharedPreferences.getString("pref_whatsrecenturl", "https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom");
+			getNewItems();
 		}
 
 	}

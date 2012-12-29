@@ -205,7 +205,7 @@ public class WhatsRecentDownloaderService extends Service {
 			PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
 					notificationIntent, 0);
 
-			String contentTitle = "Nieuwe mededelingen";
+			String contentTitle = "KahoSl: What's recent";
 			String contentText;
 			if (!result) {
 				Log.w(DEBUG_TAG, "XML download and parse had errors");
@@ -215,7 +215,7 @@ public class WhatsRecentDownloaderService extends Service {
 				notificationManager.notify(LIST_UPDATE_NOTIFICATION,
 						updateComplete);
 			} else if (nieuwe) {
-				contentText = "Er zijn nieuwe mededelingen beschikbaar";
+				contentText = "Nieuwe mededelingen beschikbaar";
 				updateComplete.setLatestEventInfo(context, contentTitle,
 						contentText, contentIntent);
 				notificationManager.notify(LIST_UPDATE_NOTIFICATION,
