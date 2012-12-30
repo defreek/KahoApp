@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ListFragment;
 import android.app.LoaderManager;
@@ -28,6 +29,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+import be.kahosl.KahoslActivity;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 import be.kahosl.whatsrecent.FilterDialog.OnCloseListDialogListener;
@@ -49,14 +52,16 @@ public class WhatsRecentListFragment extends ListFragment implements
 	private FilterDialog filterDialog;
 
 	private String filter = "%";
-	
-	public static String WHATSRECENT_URL;
+
+	public static String WHATSRECENT_URL = "";
+
+	private Context context;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Context context = getActivity().getApplicationContext();
+		context = getActivity().getApplicationContext();
 
 		getLoaderManager().initLoader(WHATSRECENT_LIST_LOADER, null, this);
 
@@ -67,33 +72,40 @@ public class WhatsRecentListFragment extends ListFragment implements
 
 		filterDialog = FilterDialog.newInstance(this);
 
-		SharedPreferences preferences = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
-		if (preferences.getBoolean("background_update_key", true)) {
-			setRecurringAlarm(context);
-		} else {
-			cancelRecurringAlarm(context);
-		}
-		
-		WHATSRECENT_URL = preferences.getString("pref_whatsrecenturl", "https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom");
-		
 		// Telkens wanneer view wordt geopend update uitvoeren, is dit nodig?
-		getNewItems();
+		// getNewItems();
 	}
-	
+
 	private void getNewItems() {
 		Intent refreshIntent = new Intent(
 				getActivity().getApplicationContext(),
 				WhatsRecentDownloaderService.class);
-		refreshIntent
-				.setData(Uri
-						.parse(WHATSRECENT_URL));
+		refreshIntent.setData(Uri.parse(WHATSRECENT_URL));
 		getActivity().startService(refreshIntent);
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		this.setEmptyText("Laden...");
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		preferences.registerOnSharedPreferenceChangeListener(this);
+
+		// "https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom"F
+
+		WHATSRECENT_URL = preferences.getString("pref_whatsrecenturl", "");
+		
+		if (WHATSRECENT_URL.isEmpty()) {
+			setEmptyText("Gelieve eerst je Toledo-url in te vullen bij instellingen.");
+		} else {
+			setEmptyText("Laden...");
+		}
+
+		if (preferences.getBoolean("background_update_key", true)) {
+			setRecurringAlarm(context);
+		} else {
+			cancelRecurringAlarm(context);
+		}
+
 		super.onViewCreated(view, savedInstanceState);
 	}
 
@@ -148,9 +160,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 		Intent refreshIntent = new Intent(
 				getActivity().getApplicationContext(),
 				WhatsRecentDownloaderService.class);
-		refreshIntent
-				.setData(Uri
-						.parse(WHATSRECENT_URL));
+		refreshIntent.setData(Uri.parse(WHATSRECENT_URL));
 		MenuItem refresh = menu.findItem(R.id.refresh_menu_item);
 		refresh.setIntent(refreshIntent);
 	}
@@ -238,15 +248,29 @@ public class WhatsRecentListFragment extends ListFragment implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
+
 		if (key.equals("pref_login")) {
 			if (sharedPreferences.getBoolean("background_update_key", true)) {
-				setRecurringAlarm(getActivity().getApplicationContext());
+				setRecurringAlarm(context);
 			} else {
-				cancelRecurringAlarm(getActivity().getApplicationContext());
+				cancelRecurringAlarm(context);
 			}
 		} else if (key.equals("pref_whatsrecenturl")) {
-			WHATSRECENT_URL = sharedPreferences.getString("pref_whatsrecenturl", "https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/e-q0422864/events/?signature=1cB0nxiYffAFaC17CkD4m9esHX4%3D&view=atom");
-			getNewItems();
+			String url = sharedPreferences.getString("pref_whatsrecenturl", "");
+
+			if (!url.contains("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/")) {
+				Toast.makeText(context, "Geen geldige Toledo-url..", Toast.LENGTH_SHORT)
+				.show();
+			} else {
+
+				WHATSRECENT_URL = url;
+
+				// empty db
+				context.getContentResolver()
+						.delete(WhatsRecentProvider.CONTENT_URI, null, null);
+
+				getNewItems();
+			}
 		}
 
 	}

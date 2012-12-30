@@ -22,6 +22,7 @@
         <EditTextPreference 
             android:title="@string/pref_whatsrecent_url"
         	android:key="pref_whatsrecenturl"
+        	android:inputType="textUri"
         	android:summary="@string/pref_whatsrecent_url_desc"	/>
         <CheckBoxPreference
             android:summary="@string/pref_update_flag"
