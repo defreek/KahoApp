@@ -186,16 +186,13 @@ public class WhatsRecentDownloaderService extends Service {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if (!result) {
-				Log.w(DEBUG_TAG, "XML download and parse had errors");
-			}
+
 			Context context = WhatsRecentDownloaderService.this
 					.getApplicationContext();
 			NotificationManager notificationManager = (NotificationManager) context
 					.getSystemService(NOTIFICATION_SERVICE);
 
 			Notification updateComplete = new Notification();
-			updateComplete.icon = android.R.drawable.stat_notify_sync;
 			updateComplete.tickerText = "Whats recent update";
 			updateComplete.when = System.currentTimeMillis();
 			updateComplete.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -209,12 +206,14 @@ public class WhatsRecentDownloaderService extends Service {
 			String contentText;
 			if (!result) {
 				Log.w(DEBUG_TAG, "XML download and parse had errors");
+				updateComplete.icon = android.R.drawable.stat_sys_warning;
 				contentText = "Er is iets misgelopen bij het ophalen van nieuwe mededelingen";
 				updateComplete.setLatestEventInfo(context, contentTitle,
 						contentText, contentIntent);
 				notificationManager.notify(LIST_UPDATE_NOTIFICATION,
 						updateComplete);
 			} else if (nieuwe) {
+				updateComplete.icon = android.R.drawable.stat_notify_sync;
 				contentText = "Nieuwe mededelingen beschikbaar";
 				updateComplete.setLatestEventInfo(context, contentTitle,
 						contentText, contentIntent);
@@ -222,9 +221,7 @@ public class WhatsRecentDownloaderService extends Service {
 						updateComplete);
 			}
 		}
-
 	}
-
 }
 
 class FeedEntry {

@@ -77,8 +77,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 	}
 
 	private void getNewItems() {
-		Intent refreshIntent = new Intent(
-				getActivity().getApplicationContext(),
+		Intent refreshIntent = new Intent(getActivity(),
 				WhatsRecentDownloaderService.class);
 		refreshIntent.setData(Uri.parse(WHATSRECENT_URL));
 		getActivity().startService(refreshIntent);
@@ -130,7 +129,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 		AlarmManager alarms = (AlarmManager) getActivity().getSystemService(
 				Context.ALARM_SERVICE);
 		alarms.setRepeating(AlarmManager.RTC_WAKEUP,
-				updateTime.getTimeInMillis(), 1 * 60 * 1000, recurringDownload);
+				updateTime.getTimeInMillis(), 5 * 60 * 1000, recurringDownload);
 	}
 
 	@Override
@@ -249,8 +248,8 @@ public class WhatsRecentListFragment extends ListFragment implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 
-		if (key.equals("pref_login")) {
-			if (sharedPreferences.getBoolean("background_update_key", true)) {
+		if (key.equals("pref_login") && !WHATSRECENT_URL.isEmpty()) {
+			if (sharedPreferences.getBoolean("background_update_key", false)) {
 				setRecurringAlarm(context);
 			} else {
 				cancelRecurringAlarm(context);
@@ -259,6 +258,12 @@ public class WhatsRecentListFragment extends ListFragment implements
 			String url = sharedPreferences.getString("pref_whatsrecenturl", "");
 
 			if (!url.contains("https://cygnus.cc.kuleuven.be/webapps/tol-data-rs-events-bb_bb60/rs/s/users/")) {
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("pref_whatsrecenturl", "");
+				editor.commit();
+				
+				WHATSRECENT_URL = "";
+				
 				Toast.makeText(context, "Geen geldige Toledo-url..", Toast.LENGTH_SHORT)
 				.show();
 			} else {
