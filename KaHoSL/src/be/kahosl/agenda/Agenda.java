@@ -19,6 +19,16 @@ public class Agenda {
 	private static final int PROJECTION_EVENT_DSTART_INDEX 			= 2;
 	private static final int PROJECTION_EVENT_EVENT_LOCATION_INDEX 	= 3;
 	
+	/* insert empty event */
+	public static void insertEvent(Activity ac) {
+		Intent intent = new Intent(Intent.ACTION_INSERT);
+		
+		intent.setType("vnd.android.cursor.item/event");
+
+		ac.startActivity(intent);
+	}
+	
+	/* insert event with stuff already filled */
 	public static void insertEvent(Activity ac, String title, String location, String description, Calendar startDate, Calendar endDate, boolean fullDay) {
 		Intent intent = new Intent(Intent.ACTION_INSERT);
 		
