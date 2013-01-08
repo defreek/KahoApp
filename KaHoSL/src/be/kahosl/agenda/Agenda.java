@@ -81,7 +81,7 @@ public class Agenda {
 	        
 	        if (isSameMonth(eventDate)) {
 	        	eventList.add(new AgendaEvent(eventTitle, eventDescription, eventLocation, eventDate));
-	        	System.out.println(eventTitle + ": " + eventDescription + " ON " + eventDate + " IN " + eventLocation);
+	        	//System.out.println(eventTitle + ": " + eventDescription + " ON " + eventDate + " IN " + eventLocation);
 	        }
 	    }
 	    

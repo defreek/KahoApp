@@ -40,4 +40,9 @@
     <string name="filter">Filter</string>
 	<string name="addtocalendar">Toevoegen aan kalender</string>
 	
+	<!--  Agenda -->
+	<string name="agendaHeader">Header</string>
+	<string name="agendaNext">Volgende Maand</string>
+	<string name="agendaPrev">Vorige Maand</string>
+	
 </resources>
