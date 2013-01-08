@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
@@ -140,6 +141,13 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			case R.id.insertevent_menu_item:
 				Agenda.insertEvent(getActivity());
 				break;
+			case R.id.viewevent_menu_item:
+				if (adapter.getClickedEventID() == -1) {
+					Toast.makeText(getActivity().getApplicationContext(), "No events on this date.", Toast.LENGTH_SHORT).show();
+				} else {
+					Agenda.viewEvent(getActivity(), adapter.getClickedEventID());
+				}
+				break;
 		}
 		
 		return true;
@@ -177,10 +185,20 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		private int currentDayOfMonth;
 		private int currentWeekDay;
 		private List<AgendaEvent> agendaEvents;
+		private AgendaEvent eventToShow;
 		private Button gridcell;
 		private TextView num_events_per_day;
+	
 		private final HashMap eventsPerMonthMap;
 		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy");
+		
+		public int getClickedEventID() {
+			if (eventToShow != null) {
+				return eventToShow.getId();
+			}
+			
+			return -1;
+		}
 		
 		// Days in Current Month
 		public GridCellAdapter(Context context, int textViewResourceId, int month, int year, List<AgendaEvent> allEvents) {
@@ -325,13 +343,11 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		 * @return
 		 */
 		private HashMap findNumberOfEventsPerMonth(int year, int month) {
-			DateFormat dateFormatter2 = new DateFormat();
 			HashMap map = new HashMap<String, Integer>();
-			
-			
+	
 			for (AgendaEvent event : agendaEvents) {
-				if (event.getMonth() == month && event.getYear() == year) {
-					String day = dateFormatter2.format("dd", event.getDate()).toString();
+				if (event.getMonth() == (month-1) && event.getYear() == year) {
+					String day = DateFormat.format("dd", event.getDate()).toString();
 					
 					if (map.containsKey(day)) {
 						Integer val = (Integer) map.get(day) + 1;
@@ -351,6 +367,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
+			
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				row = inflater.inflate(R.layout.calendar_day_gridcell, parent, false);
@@ -367,9 +384,19 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			String theday = day_color[0];
 			String themonth = day_color[2];
 			String theyear = day_color[3];
+			
 			if ((!eventsPerMonthMap.isEmpty()) && (eventsPerMonthMap != null)) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
+				Date convertedDate = new Date();
+				
+			    try {
+					convertedDate = dateFormat.parse(theday+"-"+themonth+"-"+theyear);
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				} 
+			    
+				
 				if (eventsPerMonthMap.containsKey(theday)) {
-					System.out.println(theday);
 					num_events_per_day = (TextView) row.findViewById(R.id.num_events_per_day);
 					Integer numEvents = (Integer) eventsPerMonthMap.get(theday);
 					num_events_per_day.setText(numEvents.toString());
@@ -413,11 +440,13 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		    	// if same day show in the events
 		    	if (event.sameDay(convertedDate)) {
 		    		toShow = event.getTitle();
+		    		eventToShow = event;
+		    		System.out.println(event.getId());
 		    	}
 		    }
 		    
 			selectedDayMonthYearButton.setText(toShow);
-
+				
 			try {
 				Date parsedDate = dateFormatter.parse(date_month_year);
 				Log.d(tag, "Parsed Date: " + parsedDate.toString());

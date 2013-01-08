@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ public class Agenda {
 	private static final int PROJECTION_EVENT_DESCRIPTION_INDEX 	= 1;
 	private static final int PROJECTION_EVENT_DSTART_INDEX 			= 2;
 	private static final int PROJECTION_EVENT_EVENT_LOCATION_INDEX 	= 3;
+	private static final int PROJECTION_EVENT_ID_INDEX 				= 4;
 	
 	/* insert empty event */
 	public static void insertEvent(Activity ac) {
@@ -61,7 +63,8 @@ public class Agenda {
 				CalendarContract.Events.TITLE,
 				CalendarContract.Events.DESCRIPTION,
 				CalendarContract.Events.DTSTART,
-				CalendarContract.Events.EVENT_LOCATION
+				CalendarContract.Events.EVENT_LOCATION,
+				CalendarContract.Events._ID
 		};
       
 		Cursor calendarCursor = c.getContentResolver().query(uri, eventProjection, null, null, null);
@@ -72,21 +75,31 @@ public class Agenda {
 	        String 	eventDescription = null;
 	        String 	eventLocation = null;
 	        long 	eventDate = 0;
+	        int 	eventId = 0;
 	        
 	        // Get the field values
 	        eventDescription = 	calendarCursor.getString(PROJECTION_EVENT_DESCRIPTION_INDEX);
 	        eventDate = 		Long.parseLong(calendarCursor.getString(PROJECTION_EVENT_DSTART_INDEX));
 	        eventTitle = 		calendarCursor.getString(PROJECTION_EVENT_TITLE_INDEX);
 	        eventLocation = 	calendarCursor.getString(PROJECTION_EVENT_EVENT_LOCATION_INDEX);
+	        eventId = 			Integer.parseInt(calendarCursor.getString(PROJECTION_EVENT_ID_INDEX));
 	        
 	        if (isSameMonth(eventDate)) {
-	        	eventList.add(new AgendaEvent(eventTitle, eventDescription, eventLocation, eventDate));
+	        	eventList.add(new AgendaEvent(eventTitle, eventDescription, eventLocation, eventDate, eventId));
 	        	//System.out.println(eventTitle + ": " + eventDescription + " ON " + eventDate + " IN " + eventLocation);
 	        }
 	    }
 	    
 	    calendarCursor.close();
 	    return eventList;
+	}
+	
+	public static void viewEvent(Activity ac, int id) {
+		final Uri uri = ContentUris.withAppendedId(Events.CONTENT_URI, id);
+		final Intent intent = new Intent(Intent.ACTION_VIEW)
+		   .setData(uri);
+		
+		ac.startActivity(intent);
 	}
 	
 	private static boolean isSameMonth(long dateCompare) {

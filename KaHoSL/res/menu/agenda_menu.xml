@@ -5,6 +5,11 @@
     <item
         android:id="@+id/insertevent_menu_item"
         android:icon="@drawable/ic_menu_my_calendar"
-        android:title="@string/addtocalendar"
+        android:title="@string/addEvent"
+        android:showAsAction="always"></item>
+    <item
+        android:id="@+id/viewevent_menu_item"
+        android:icon="@drawable/ic_menu_agenda"
+        android:title="@string/viewEvent"
         android:showAsAction="always"></item>
 </menu>

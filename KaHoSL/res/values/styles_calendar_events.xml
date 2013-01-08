@@ -9,6 +9,6 @@
 			name="android:textStyle">bold
 		</item>
 		<item
-			name="android:textSize">8sp</item>
+			name="android:textSize">10sp</item>
 	</style>
 </resources>

@@ -9,6 +9,7 @@ public class AgendaEvent {
 	private String description;
 	private String location;
 	private long dtstart;
+	private int eventID;
 	
 	public String getTitle() {
 		return title;
@@ -56,6 +57,10 @@ public class AgendaEvent {
 		return d;
 	}
 	
+	public int getId() {
+		return eventID;
+	}
+	
 	public boolean sameDay(Date date) {
 		int dateM, dateY, dateD;
 		Calendar cal = Calendar.getInstance();
@@ -73,10 +78,11 @@ public class AgendaEvent {
 		return false;
 	}
 	
-	public AgendaEvent(String title, String description, String location, long dtstart) {
+	public AgendaEvent(String title, String description, String location, long dtstart, int id) {
 		this.location = location;
 		this.title = title;
 		this.description = description;
 		this.dtstart = dtstart;
+		this.eventID = id;
 	}
 }
