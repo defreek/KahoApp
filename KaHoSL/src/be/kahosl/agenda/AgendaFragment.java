@@ -12,9 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import android.R.anim;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -50,8 +54,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 	private Calendar _calendar;
 	private int month, year;
 	
-	private final DateFormat dateFormatter = new DateFormat();
-	
 	private static final String dateTemplate = "MMMM yyyy";
 	private static final String tag = "AgendaFragment";
 	private static final long serialVersionUID = 16659811758078154L;
@@ -71,7 +73,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		year = _calendar.get(Calendar.YEAR);
 		
 		selectedDayMonthYearButton = (Button) abView.findViewById(R.id.selectedDayMonthYear);
-		selectedDayMonthYearButton.setText("Selected: ");
+		selectedDayMonthYearButton.setText("");
 
 		prevMonth = (ImageView) abView.findViewById(R.id.prevMonth);
 		prevMonth.setOnClickListener(new OnClickListener() {
@@ -143,7 +145,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 				break;
 			case R.id.viewevent_menu_item:
 				if (adapter.getClickedEventID() == -1) {
-					Toast.makeText(getActivity().getApplicationContext(), "No events on this date.", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity().getApplicationContext(), "Er zijn geen events op de geselecteerde dag.", Toast.LENGTH_SHORT).show();
 				} else {
 					Agenda.viewEvent(getActivity(), adapter.getClickedEventID());
 				}
@@ -333,11 +335,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		}
 
 		/**
-		 * NOTE: YOU NEED TO IMPLEMENT THIS PART Given the YEAR, MONTH, retrieve
-		 * ALL entries from a SQLite database for that month. Iterate over the
-		 * List of All entries, and get the dateCreated, which is converted into
-		 * day.
-		 * 
 		 * @param year
 		 * @param month
 		 * @return
@@ -365,6 +362,8 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			return position;
 		}
 
+		@SuppressWarnings("deprecation")
+		@SuppressLint("NewApi")
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
 			
@@ -378,12 +377,13 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			gridcell.setOnClickListener(this);
 
 			// ACCOUNT FOR SPACING
-
-			//Log.d(tag, "Current Day: " + getCurrentDayOfMonth());
+			SimpleDateFormat format = new SimpleDateFormat("MMMM");
+			
 			String[] day_color = list.get(position).split("-");
 			String theday = day_color[0];
 			String themonth = day_color[2];
 			String theyear = day_color[3];
+			boolean isEvD = false;
 			
 			if ((!eventsPerMonthMap.isEmpty()) && (eventsPerMonthMap != null)) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
@@ -397,9 +397,19 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			    
 				
 				if (eventsPerMonthMap.containsKey(theday)) {
-					num_events_per_day = (TextView) row.findViewById(R.id.num_events_per_day);
+					// if OS is not new enough use the deprecated function
+					if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.JELLY_BEAN) {
+						gridcell.setBackground(getResources().getDrawable(R.drawable.calendar_tile_small_event));
+					} else {
+						gridcell.setBackgroundDrawable(getResources().getDrawable(R.drawable.calendar_tile_small_event));
+					}
+					
+					isEvD = true;
+					
+					//gridcell.setBackground((Drawable)R.drawable.calendar_tile_small_event);
+					/*num_events_per_day = (TextView) row.findViewById(R.id.num_events_per_day);
 					Integer numEvents = (Integer) eventsPerMonthMap.get(theday);
-					num_events_per_day.setText(numEvents.toString());
+					num_events_per_day.setText(numEvents.toString());*/
 				}
 			}
 
@@ -413,11 +423,15 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			}
 			
 			if (day_color[1].equals("WHITE")) {
-				gridcell.setTextColor(Color.WHITE);
+				gridcell.setTextColor(Color.BLACK);
 			}
 			
-			if (day_color[1].equals("BLUE")) {
+			if (day_color[1].equals("BLUE") && format.format(Calendar.getInstance().getTime()).equals(themonth)) {
 				gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
+			}
+			
+			if (isEvD) {
+				gridcell.setTextColor(android.graphics.Color.WHITE);
 			}
 			
 			return row;
@@ -425,7 +439,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		
 		public void onClick(View view) {
 			String date_month_year = (String) view.getTag();
-			String toShow = "no events on " + date_month_year;
+			String toShow = "empty";
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
 			Date convertedDate = new Date();
 			
@@ -439,10 +453,21 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		    for (AgendaEvent event : agendaEvents) {
 		    	// if same day show in the events
 		    	if (event.sameDay(convertedDate)) {
-		    		toShow = event.getTitle();
+		    		if (! toShow.equals("empty")) {
+		    			toShow = toShow + ", " + event.getTitle();
+		    		} else {
+		    			toShow = event.getTitle();
+		    		}
+		    		
 		    		eventToShow = event;
 		    		System.out.println(event.getId());
+		    	} else {
+		    		eventToShow = null;
 		    	}
+		    }
+		    
+		    if (toShow.equals("empty")) {
+		    	toShow = "geen events op " + date_month_year;
 		    }
 		    
 			selectedDayMonthYearButton.setText(toShow);

@@ -43,6 +43,7 @@
 	<!--  Agenda -->
 	<string name="addEvent">Event Toevoegen</string>
 	<string name="viewEvent">Event Bekijken</string>
+	<string name="listEvent">Eventlijst Inzien</string>
 	<string name="agendaHeader">Header</string>
 	<string name="agendaNext">Volgende Maand</string>
 	<string name="agendaPrev">Vorige Maand</string>

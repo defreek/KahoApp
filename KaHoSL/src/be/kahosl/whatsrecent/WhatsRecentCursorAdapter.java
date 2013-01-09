@@ -157,7 +157,7 @@ public class WhatsRecentCursorAdapter extends CursorAdapter {
 
 			if ((Boolean) pairs.getValue()) {
 				String title = getTitle((Integer)pairs.getKey());
-				Agenda.insertEvent(activity, title, "", "", getDateFromString(title), null, false);
+				Agenda.insertEvent(activity, title, "", "KAHOSL", getDateFromString(title), null, false);
 			}
 			it.remove(); // avoids a ConcurrentModificationException
 		}
