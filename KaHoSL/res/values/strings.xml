@@ -48,4 +48,13 @@
 	<string name="agendaNext">Volgende Maand</string>
 	<string name="agendaPrev">Vorige Maand</string>
 	
+	<!-- Kalender Header -->
+	<string name="agendaSun">Zon</string>
+	<string name="agendaMon">Ma</string>
+	<string name="agendaTue">Di</string>
+	<string name="agendaWed">Woe</string>
+	<string name="agendaThu">Do</string>
+	<string name="agendaFri">Vrij</string>
+	<string name="agendaSat">Zat</string>
+	
 </resources>

@@ -426,12 +426,12 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 				gridcell.setTextColor(Color.BLACK);
 			}
 			
-			if (day_color[1].equals("BLUE") && format.format(Calendar.getInstance().getTime()).equals(themonth)) {
-				gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
+			if (isEvD && !(format.format(Calendar.getInstance().getTime()).equals(theday))) {
+				gridcell.setTextColor(android.graphics.Color.WHITE);
 			}
 			
-			if (isEvD) {
-				gridcell.setTextColor(android.graphics.Color.WHITE);
+			if (day_color[1].equals("BLUE") && format.format(Calendar.getInstance().getTime()).equals(themonth)) {
+				gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
 			}
 			
 			return row;
@@ -470,8 +470,13 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		    	toShow = "geen events op " + date_month_year;
 		    }
 		    
-			selectedDayMonthYearButton.setText(toShow);
-				
+		    // if landscape show the event in a toast
+		    if (getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_PORTRAIT) {
+		    	selectedDayMonthYearButton.setText(toShow);
+		    } else {
+				Toast.makeText(getActivity().getApplicationContext(), toShow, Toast.LENGTH_SHORT).show();
+		    }
+		    
 			try {
 				Date parsedDate = dateFormatter.parse(date_month_year);
 				Log.d(tag, "Parsed Date: " + parsedDate.toString());
