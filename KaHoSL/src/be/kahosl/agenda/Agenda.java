@@ -85,6 +85,9 @@ public class Agenda {
 	        eventId = 			Integer.parseInt(calendarCursor.getString(PROJECTION_EVENT_ID_INDEX));
 	        
 	        if (isSameMonth(eventDate)) {
+	        	if (eventTitle.contains("ASP.NET")) {
+	        		System.out.println(eventTitle + ", id: " + eventId);
+	        	}
 	        	eventList.add(new AgendaEvent(eventTitle, eventDescription, eventLocation, eventDate, eventId));
 	        	//System.out.println(eventTitle + ": " + eventDescription + " ON " + eventDate + " IN " + eventLocation);
 	        }
@@ -95,6 +98,7 @@ public class Agenda {
 	}
 	
 	public static void viewEvent(Activity ac, int id) {
+		System.out.println(id);
 		final Uri uri = ContentUris.withAppendedId(Events.CONTENT_URI, id);
 		final Intent intent = new Intent(Intent.ACTION_VIEW)
 		   .setData(uri);

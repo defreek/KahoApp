@@ -144,6 +144,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 				Agenda.insertEvent(getActivity());
 				break;
 			case R.id.viewevent_menu_item:
+				System.out.println(adapter.getClickedEventID());
 				if (adapter.getClickedEventID() == -1) {
 					Toast.makeText(getActivity().getApplicationContext(), "Er zijn geen events op de geselecteerde dag.", Toast.LENGTH_SHORT).show();
 				} else {
@@ -195,6 +196,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy");
 		
 		public int getClickedEventID() {
+			
 			if (eventToShow != null) {
 				return eventToShow.getId();
 			}
@@ -442,7 +444,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			String toShow = "empty";
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
 			Date convertedDate = new Date();
-			
+			eventToShow = null;
 			
 		    try {
 				convertedDate = dateFormat.parse(date_month_year);
@@ -451,6 +453,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			} 
 		    
 		    for (AgendaEvent event : agendaEvents) {
+		    	
 		    	// if same day show in the events
 		    	if (event.sameDay(convertedDate)) {
 		    		if (! toShow.equals("empty")) {
@@ -460,9 +463,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		    		}
 		    		
 		    		eventToShow = event;
-		    		System.out.println(event.getId());
-		    	} else {
-		    		eventToShow = null;
 		    	}
 		    }
 		    
