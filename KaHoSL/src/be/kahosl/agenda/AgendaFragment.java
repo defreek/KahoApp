@@ -404,19 +404,20 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			gridcell.setText(theday);
 			gridcell.setTag(theday + "-" + themonth + "-" + theyear);
 			//Log.d(tag, "Setting GridCell " + theday + "-" + themonth + "-" + theyear);
-
+			
+			gridcell.setTextColor(Color.BLACK);
+			
+			// day not in month
 			if (day_color[1].equals("GREY")) {
 				gridcell.setTextColor(Color.LTGRAY);
 			}
 			
-			if (day_color[1].equals("WHITE")) {
-				gridcell.setTextColor(Color.BLACK);
-			}
-			
+			// event day
 			if (isEvD && !(format.format(Calendar.getInstance().getTime()).equals(theday))) {
 				gridcell.setTextColor(android.graphics.Color.WHITE);
 			}
 			
+			// today
 			if (day_color[1].equals("BLUE") && format.format(Calendar.getInstance().getTime()).equals(themonth)) {
 				gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
 			}
