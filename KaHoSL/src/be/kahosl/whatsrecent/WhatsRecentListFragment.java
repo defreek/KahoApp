@@ -73,14 +73,15 @@ public class WhatsRecentListFragment extends ListFragment implements
 		filterDialog = FilterDialog.newInstance(this);
 
 		// Telkens wanneer view wordt geopend update uitvoeren, is dit nodig?
-		// getNewItems();
+		getNewItems();
 	}
 
 	private void getNewItems() {
-		Intent refreshIntent = new Intent(getActivity(),
+		Intent refreshIntent = new Intent(context,
 				WhatsRecentDownloaderService.class);
 		refreshIntent.setData(Uri.parse(WHATSRECENT_URL));
 		getActivity().startService(refreshIntent);
+		
 	}
 
 	@Override
@@ -265,6 +266,9 @@ public class WhatsRecentListFragment extends ListFragment implements
 				
 				WHATSRECENT_URL = "";
 				
+				context.getContentResolver()
+				.delete(WhatsRecentProvider.CONTENT_URI, null, null);
+				
 				Toast.makeText(context, "Geen geldige Toledo-url..", Toast.LENGTH_SHORT)
 				.show();
 			} else {
@@ -275,7 +279,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 				context.getContentResolver()
 						.delete(WhatsRecentProvider.CONTENT_URI, null, null);
 
-				getNewItems();
+				//getNewItems();
 			}
 		}
 
