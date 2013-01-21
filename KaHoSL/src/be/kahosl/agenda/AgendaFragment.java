@@ -12,12 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import android.R.anim;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -30,21 +29,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 import be.kahosl.R;
 import be.kahosl.TabFragment;
 
+@SuppressLint("SimpleDateFormat")
 public class AgendaFragment extends Fragment implements TabFragment, Serializable, Parcelable {
 	private List<AgendaEvent> agendaEvents;
-	private ImageView calendarToJournalButton;
 	private Button selectedDayMonthYearButton;
 	private Button currentMonth;
 	private ImageView prevMonth;
@@ -180,19 +175,15 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		private final Context _context;
 		private final List<String> list;
 		private static final int DAY_OFFSET = 1;
-		private final String[] weekdays = new String[]{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 		private final String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 		private final int[] daysOfMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-		private final int month, year;
-		private int daysInMonth, prevMonthDays;
+		private int daysInMonth;
 		private int currentDayOfMonth;
 		private int currentWeekDay;
 		private List<AgendaEvent> agendaEvents;
 		private AgendaEvent eventToShow;
 		private Button gridcell;
-		private TextView num_events_per_day;
-	
-		private final HashMap eventsPerMonthMap;
+		private final HashMap<String, Integer> eventsPerMonthMap;
 		private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy");
 		
 		public int getClickedEventID() {
@@ -209,8 +200,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			super();
 			this._context = context;
 			this.list = new ArrayList<String>();
-			this.month = month;
-			this.year = year;
 			this.agendaEvents = allEvents;
 			
 			//Log.d(tag, "==> Passed in Date FOR Month: " + month + " " + "Year: " + year);
@@ -230,10 +219,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		
 		private String getMonthAsString(int i) {
 			return months[i];
-		}
-
-		private String getWeekDayAsString(int i) {
-			return weekdays[i];
 		}
 
 		private int getNumberOfDaysOfMonth(int i) {
@@ -341,8 +326,8 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		 * @param month
 		 * @return
 		 */
-		private HashMap findNumberOfEventsPerMonth(int year, int month) {
-			HashMap map = new HashMap<String, Integer>();
+		private HashMap<String, Integer> findNumberOfEventsPerMonth(int year, int month) {
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
 	
 			for (AgendaEvent event : agendaEvents) {
 				if (event.getMonth() == (month-1) && event.getYear() == year) {
@@ -389,10 +374,10 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			
 			if ((!eventsPerMonthMap.isEmpty()) && (eventsPerMonthMap != null)) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMMM-yyyy");
-				Date convertedDate = new Date();
+				new Date();
 				
 			    try {
-					convertedDate = dateFormat.parse(theday+"-"+themonth+"-"+theyear);
+					dateFormat.parse(theday+"-"+themonth+"-"+theyear);
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				} 
@@ -470,8 +455,9 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		    	toShow = "geen events op " + date_month_year;
 		    }
 		    
-		    // if landscape show the event in a toast
-		    if (getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_PORTRAIT) {
+		    getResources().getConfiguration();
+			// if landscape show the event in a toast
+		    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 		    	selectedDayMonthYearButton.setText(toShow);
 		    } else {
 				Toast.makeText(getActivity().getApplicationContext(), toShow, Toast.LENGTH_SHORT).show();
