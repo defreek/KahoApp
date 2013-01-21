@@ -96,7 +96,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 		if (WHATSRECENT_URL.isEmpty()) {
 			setEmptyText("Gelieve eerst je Toledo-url in te vullen bij instellingen.");
 		} else {
-			setEmptyText("Laden...");
+			setEmptyText("Geen mededelingen gevonden");
 		}
 
 		if (preferences.getBoolean("background_update_key", true)) {
@@ -145,6 +145,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW,
 					Uri.parse(announcementUrl));
 			startActivity(browserIntent);
+			
 		}
 		cursor.close();
 	}
@@ -248,7 +249,7 @@ public class WhatsRecentListFragment extends ListFragment implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 
-		if (key.equals("pref_login") && !WHATSRECENT_URL.isEmpty()) {
+		if (key.equals("background_update_key") && !WHATSRECENT_URL.isEmpty()) {
 			if (sharedPreferences.getBoolean("background_update_key", false)) {
 				setRecurringAlarm(context);
 			} else {
