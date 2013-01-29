@@ -80,7 +80,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 					month--;
 				}
 				
-				//Log.d(tag, "Setting Prev Month in GridCellAdapter: " + "Month: " + month + " Year: " + year);
 				setGridCellAdapterToDate(month, year);
 			}
 		});
@@ -98,10 +97,11 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 					month++;
 				}
 				
-				//Log.d(tag, "Setting Next Month in GridCellAdapter: " + "Month: " + month + " Year: " + year);
 				setGridCellAdapterToDate(month, year);
 			}
 		});
+		
+		
 		
 		calendarView = (GridView) abView.findViewById(R.id.calendar);
 		
@@ -115,13 +115,14 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 	}
 	
 	/**
-	 * 
+	 * goes to next month and reset the selectedDay
 	 * @param month
 	 * @param year
 	 */
 	private void setGridCellAdapterToDate(int month, int year) {
 		adapter = new GridCellAdapter((this.getActivity()).getApplicationContext(), R.id.calendar_day_gridcell, month, year, agendaEvents);
-		_calendar.set(year, month - 1, _calendar.get(Calendar.DAY_OF_MONTH));
+		selectedDayMonthYearButton.setText("");
+		_calendar.set(year, month - 1, 1);
 		currentMonth.setText(DateFormat.format(dateTemplate, _calendar.getTime()));
 		adapter.notifyDataSetChanged();
 		calendarView.setAdapter(adapter);
@@ -202,18 +203,14 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			this.list = new ArrayList<String>();
 			this.agendaEvents = allEvents;
 			
-			//Log.d(tag, "==> Passed in Date FOR Month: " + month + " " + "Year: " + year);
 			Calendar calendar = Calendar.getInstance();
 			setCurrentDayOfMonth(calendar.get(Calendar.DAY_OF_MONTH));
 			setCurrentWeekDay(calendar.get(Calendar.DAY_OF_WEEK));
-			//Log.d(tag, "New Calendar:= " + calendar.getTime().toString());
-			//Log.d(tag, "CurrentDayOfWeek :" + getCurrentWeekDay());
-			//Log.d(tag, "CurrentDayOfMonth :" + getCurrentDayOfMonth());
 
 			// Print Month
 			printMonth(month, year);
 
-			// Find Number of Events
+			// Find Number of Events in day
 			eventsPerMonthMap = findNumberOfEventsPerMonth(year, month);
 		}
 		
@@ -240,11 +237,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 		 * @param yy
 		 */
 		private void printMonth(int mm, int yy) {
-			//Log.d(tag, "==> printMonth: mm: " + mm + " " + "yy: " + yy);
-			// The number of days to leave blank at
-			// the start of this month.
 			int trailingSpaces = 0;
-			//int leadSpaces = 0;
 			int daysInPrevMonth = 0;
 			int prevMonth = 0;
 			int prevYear = 0;
@@ -252,14 +245,10 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			int nextYear = 0;
 
 			int currentMonth = mm - 1;
-			//String currentMonthName = getMonthAsString(currentMonth);
 			daysInMonth = getNumberOfDaysOfMonth(currentMonth);
-
-			//Log.d(tag, "Current Month: " + " " + currentMonthName + " having " + daysInMonth + " days.");
 
 			// Gregorian Calendar : MINUS 1, set to FIRST OF MONTH
 			GregorianCalendar cal = new GregorianCalendar(yy, currentMonth, 1);
-			//Log.d(tag, "Gregorian Calendar:= " + cal.getTime().toString());
 
 			if (currentMonth == 11) {
 				prevMonth = currentMonth - 1;
@@ -267,21 +256,18 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 				nextMonth = 0;
 				prevYear = yy;
 				nextYear = yy + 1;
-				//Log.d(tag, "*->PrevYear: " + prevYear + " PrevMonth:" + prevMonth + " NextMonth: " + nextMonth + " NextYear: " + nextYear);
 			} else if (currentMonth == 0) {
 				prevMonth = 11;
 				prevYear = yy - 1;
 				nextYear = yy;
 				daysInPrevMonth = getNumberOfDaysOfMonth(prevMonth);
 				nextMonth = 1;
-				//Log.d(tag, "**--> PrevYear: " + prevYear + " PrevMonth:" + prevMonth + " NextMonth: " + nextMonth + " NextYear: " + nextYear);
 			} else {
 				prevMonth = currentMonth - 1;
 				nextMonth = currentMonth + 1;
 				nextYear = yy;
 				prevYear = yy;
 				daysInPrevMonth = getNumberOfDaysOfMonth(prevMonth);
-				//Log.d(tag, "***---> PrevYear: " + prevYear + " PrevMonth:" + prevMonth + " NextMonth: " + nextMonth + " NextYear: " + nextYear);
 			}
 
 			// Compute how much to leave before before the first day of the
@@ -290,23 +276,17 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 			int currentWeekDay = cal.get(Calendar.DAY_OF_WEEK) - 1;
 			trailingSpaces = currentWeekDay;
 
-			//Log.d(tag, "Week Day:" + currentWeekDay + " is " + getWeekDayAsString(currentWeekDay));
-			//Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
-			//Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
-
 			if (cal.isLeapYear(cal.get(Calendar.YEAR)) && mm == 1) {
 				++daysInMonth;
 			}
 
 			// Trailing Month days
 			for (int i = 0; i < trailingSpaces; i++) {
-				//Log.d(tag, "PREV MONTH:= " + prevMonth + " => " + getMonthAsString(prevMonth) + " " + String.valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET) + i));
 				list.add(String.valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET) + i) + "-GREY" + "-" + getMonthAsString(prevMonth) + "-" + prevYear);
 			}
 
 			// Current Month Days
 			for (int i = 1; i <= daysInMonth; i++) {
-				//Log.d(currentMonthName, String.valueOf(i) + " " + getMonthAsString(currentMonth) + " " + yy);
 				if (i == getCurrentDayOfMonth()) {
 					list.add(String.valueOf(i) + "-BLUE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
 				} else {
@@ -316,7 +296,6 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 
 			// Leading Month days
 			for (int i = 0; i < list.size() % 7; i++) {
-				//Log.d(tag, "NEXT MONTH:= " + getMonthAsString(nextMonth));
 				list.add(String.valueOf(i + 1) + "-GREY" + "-" + getMonthAsString(nextMonth) + "-" + nextYear);
 			}
 		}
@@ -331,7 +310,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 	
 			for (AgendaEvent event : agendaEvents) {
 				if (event.getMonth() == (month-1) && event.getYear() == year) {
-					String day = DateFormat.format("dd", event.getDate()).toString();
+					String day = DateFormat.format("d", event.getDate()).toString();
 					
 					if (map.containsKey(day)) {
 						Integer val = (Integer) map.get(day) + 1;
@@ -382,8 +361,7 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 					e1.printStackTrace();
 				} 
 			    
-				
-				if (eventsPerMonthMap.containsKey(theday)) {
+				if (eventsPerMonthMap.containsKey(theday) && !day_color[1].equals("GREY")) {	
 					// if OS is not new enough use the deprecated function
 					if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.JELLY_BEAN) {
 						gridcell.setBackground(getResources().getDrawable(R.drawable.calendar_tile_small_event));
@@ -392,19 +370,14 @@ public class AgendaFragment extends Fragment implements TabFragment, Serializabl
 					}
 					
 					isEvD = true;
-					
-					//gridcell.setBackground((Drawable)R.drawable.calendar_tile_small_event);
-					/*num_events_per_day = (TextView) row.findViewById(R.id.num_events_per_day);
-					Integer numEvents = (Integer) eventsPerMonthMap.get(theday);
-					num_events_per_day.setText(numEvents.toString());*/
 				}
 			}
 
 			// Set the Day GridCell
 			gridcell.setText(theday);
 			gridcell.setTag(theday + "-" + themonth + "-" + theyear);
-			//Log.d(tag, "Setting GridCell " + theday + "-" + themonth + "-" + theyear);
 			
+			// default text color
 			gridcell.setTextColor(Color.BLACK);
 			
 			// day not in month
